@@ -1,5 +1,6 @@
 package edu.psu.sweng888.activesync;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -42,7 +43,8 @@ public class Homepage extends AppCompatActivity {
         recoveryStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // do something
+                Intent intent = new Intent(Homepage.this, RecoveryStatus.class);
+                startActivity(intent);
             }
         });
 

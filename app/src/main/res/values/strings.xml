@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">ActiveSync</string>
     <string name="homepage_greeting">Good morning, &lt;UserName&gt;!</string>
+    <string name="recovery_status_greeting">Recovery Status</string>
     <string name="log_workout_button">Log a Workout</string>
     <string name="calendar_button">Calendar View</string>
     <string name="recovery_status_button">Recovery Status</string>
     <string name="track_progress_button">Track Progress</string>
+    <string name="back_button">Return</string>
 </resources>
