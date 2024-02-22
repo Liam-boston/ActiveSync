@@ -21,6 +21,8 @@ public class RecoveryStatus extends AppCompatActivity {
         this.greetingTextView = findViewById(R.id.recovery_status_greeting);
         this.backButton = findViewById(R.id.back_button);
 
+        // https://www.codtronic.com/blog/android/android-app-design-bottom-navigation-bar/
+
         /**
          * onClick listener for recoveryStatusButton
          */

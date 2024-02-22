@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".RecoveryStatus">
 
     <TextView
@@ -23,5 +22,28 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="@string/back_button" />
+
+    <!--    Copy/paste this ConstraintLayout to add the nav-bar to another page     -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity_recovery_status">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavView"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:itemBackground="@color/purple_500"
+            app:itemIconSize="24dp"
+            app:itemIconTint="@color/purple_200"
+            app:itemPaddingBottom="12dp"
+            app:itemPaddingTop="8dp"
+            app:itemTextColor="@color/white"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_nav_menu" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
