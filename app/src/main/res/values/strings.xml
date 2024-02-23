@@ -3,6 +3,9 @@
     <string name="app_name">ActiveSync</string>
     <string name="homepage_greeting">Good morning, &lt;UserName&gt;!</string>
     <string name="recovery_status_greeting">Recovery Status</string>
+    <string name="calendar_greeting">Calendar View</string>
+    <string name="log_workout_greeting">Log Workout</string>
+    <string name="track_progress_greeting">Track Progress</string>
 
     <!--    Button Text    -->
     <string name="log_workout_button">Log a Workout</string>
@@ -17,5 +20,7 @@
     <string name="recovery_icon_text">Recovery</string>
     <string name="calendar_icon_text">Calendar</string>
     <string name="progress_icon_text">Progress</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
