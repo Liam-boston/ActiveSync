@@ -1,6 +1,5 @@
 package edu.psu.sweng888.activesync;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,7 @@ public class Homepage extends Fragment {
     public Homepage() {
         // Required empty public constructor
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class Homepage extends Fragment {
             @Override
             public void onClick(View v) {
                 LogWorkout logWorkoutFragment = new LogWorkout();
-
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, logWorkoutFragment).commit();
             }
         });
 
@@ -54,7 +53,8 @@ public class Homepage extends Fragment {
         calendarViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // do something
+                Calendar calendarFragment = new Calendar();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, calendarFragment).commit();
             }
         });
 
@@ -64,7 +64,8 @@ public class Homepage extends Fragment {
         recoveryStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecoveryStatus recoveryStatusFragment = new RecoveryStatus();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, recoveryStatusFragment).commit();
             }
         });
 
@@ -74,7 +75,8 @@ public class Homepage extends Fragment {
         trackProgressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // do something
+                TrackProgress trackProgressFragment = new TrackProgress();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, trackProgressFragment).commit();
             }
         });
         return view;
@@ -88,7 +90,5 @@ public class Homepage extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 }
