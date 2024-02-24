@@ -3,31 +3,31 @@
 
     <!--    Log workout action item    -->
     <item
-        android:id="@+id/log_workout_icon"
+        android:id="@+id/log_workout_item"
         android:icon="@drawable/log_workout_icon"
         android:title="@string/log_workout_icon_text"/>
 
     <!--    Recovery status action item    -->
     <item
-        android:id="@+id/recovery_icon"
+        android:id="@+id/recovery_item"
         android:icon="@drawable/recovery_icon"
         android:title="@string/recovery_icon_text"/>
 
     <!--    Home action item    -->
     <item
-        android:id="@+id/home_icon"
+        android:id="@+id/home_item"
         android:icon="@drawable/home_icon"
         android:title="@string/home_icon_text"/>
 
     <!--    Calendar view action item    -->
     <item
-        android:id="@+id/calendar_icon"
+        android:id="@+id/calendar_item"
         android:icon="@drawable/calendar_icon"
         android:title="@string/calendar_icon_text"/>
 
     <!--    Track progress action item    -->
     <item
-        android:id="@+id/progress_icon"
+        android:id="@+id/progress_item"
         android:icon="@drawable/progress_icon"
         android:title="@string/progress_icon_text"/>
 </menu>

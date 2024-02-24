@@ -13,6 +13,6 @@ public class TrackProgress extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recovery_status, container, false);
+        return inflater.inflate(R.layout.fragment_track_progress, container, false);
     }
 }
