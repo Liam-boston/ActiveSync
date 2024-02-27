@@ -18,6 +18,7 @@ public class Homepage extends Fragment {
     Button calendarViewButton;
     Button recoveryStatusButton;
     Button trackProgressButton;
+    Button gymLocatorButton;
 
     public Homepage() {
         // Required empty public constructor
@@ -36,9 +37,10 @@ public class Homepage extends Fragment {
         recoveryStatusButton = view.findViewById(R.id.recovery_status_button);
         trackProgressButton = view.findViewById(R.id.track_progress_button);
 
-        /**
-         * onClick listener for logWorkoutButton
-         */
+        //Max 5 items in navBar
+        gymLocatorButton = view.findViewById(R.id.gym_locator_button);
+
+        /** * onClick listener for logWorkoutButton */
         logWorkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,9 +49,7 @@ public class Homepage extends Fragment {
             }
         });
 
-        /**
-         * onClick listener for calendarViewButton
-         */
+        /** * onClick listener for calendarViewButton */
         calendarViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,9 +58,7 @@ public class Homepage extends Fragment {
             }
         });
 
-        /**
-         * onClick listener for recoveryStatusButton
-         */
+        /** * onClick listener for recoveryStatusButton */
         recoveryStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,9 +67,7 @@ public class Homepage extends Fragment {
             }
         });
 
-        /**
-         * onClick listener for trackProgressButton
-         */
+        /** * onClick listener for trackProgressButton */
         trackProgressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +75,17 @@ public class Homepage extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, trackProgressFragment).commit();
             }
         });
+
+        /** * onClick listener for gymLocatorButton */
+        gymLocatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GymLocator gymLocatorFragment = new GymLocator();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, gymLocatorFragment).commit();
+            }
+        });
+
+
         return view;
     }
 

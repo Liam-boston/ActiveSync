@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private LogWorkout logWorkoutFragment;
     private RecoveryStatus recoveryStatusFragment;
     private TrackProgress trackProgressFragment;
+    private GymLocator gymLocatorFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         logWorkoutFragment = new LogWorkout();
         recoveryStatusFragment = new RecoveryStatus();
         trackProgressFragment = new TrackProgress();
+
+
+        /*gymLocatorFragment = new GymLocator();*/
 
         // this will display the Homepage on initial launch (instead of the nav-bar)
         getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, homepageFragment).commit();
@@ -54,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.progress_item) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, trackProgressFragment).commit();
                     return true;
-                }
+                } /*else if (id == R.id.gym_item) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, gymLocatorFragment).commit();
+                    return true;
+                }*/
                 return false;
             }
         });
