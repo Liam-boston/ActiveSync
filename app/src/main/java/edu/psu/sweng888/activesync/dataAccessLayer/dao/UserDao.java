@@ -8,6 +8,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+import androidx.room.Upsert;
 
 import java.util.List;
 
@@ -20,11 +21,27 @@ import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
 public interface UserDao {
 
     /**
+     * Inserts a new user record into the database.
+     * @param user The user record to insert.
+     * @return The auto-generated value of inserted record's "userId" column.
+     */
+    @Insert
+    long insert(User user);
+
+    /**
+     * Upserts a user record into the database.
+     * @param user The user record to upsert.
+     * @return The value of the record's "userId" column after the operation is complete.
+     */
+    @Upsert
+    long upsert(User user);
+
+    /**
      * Inserts an arbitrary number of user records into the database.
      * @param users The user records to insert.
      */
     @Insert
-    void insertAll(User... users);
+    long[] insertAll(User... users);
 
     /**
      * Deletes the given user record from the database.

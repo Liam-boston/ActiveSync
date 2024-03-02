@@ -21,5 +21,16 @@ public class User {
      * The user's display name.
      */
     public String name;
+
+    public User() { }
+
+    public User(Long id, String name) {
+        if (id != null) {
+            this.userId = id;
+        }
+        if (name != null) {
+            this.name = name;
+        }
+    }
 }
 

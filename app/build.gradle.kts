@@ -37,6 +37,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.test:core:1.5.0")
     // Adds support for RoomDB
     // See: https://developer.android.com/training/data-storage/room/#kts
     val room_version = "2.6.1"
