@@ -1,10 +1,15 @@
 package edu.psu.sweng888.activesync;
 
+import static edu.psu.sweng888.activesync.R.id.mapSearch;
+
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,6 +24,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.List;
+
 import edu.psu.sweng888.activesync.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity  {
@@ -30,6 +37,9 @@ public class MainActivity extends AppCompatActivity  {
     private RecoveryStatus recoveryStatusFragment;
     private TrackProgress trackProgressFragment;
 
+
+
+
     /** Don't need this here most likely
      * Map already integrated on GymLocator Fragment
      * Only 5 elements allowed in bottom navigation **/
@@ -37,10 +47,15 @@ public class MainActivity extends AppCompatActivity  {
     //private GoogleMap gymMap;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
 
 
 

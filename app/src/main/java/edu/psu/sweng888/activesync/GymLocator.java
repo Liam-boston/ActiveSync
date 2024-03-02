@@ -1,12 +1,17 @@
 package edu.psu.sweng888.activesync;
 
+import static edu.psu.sweng888.activesync.R.id.mapSearch;
+
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,6 +21,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
 public class GymLocator extends Fragment implements OnMapReadyCallback {
 
     public GymLocator() {
@@ -23,6 +30,9 @@ public class GymLocator extends Fragment implements OnMapReadyCallback {
     }
 
     private GoogleMap gymMap;
+    //Search View
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +44,8 @@ public class GymLocator extends Fragment implements OnMapReadyCallback {
         //Initialize Map Fragment
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map);
+
+
 
         //Async Map
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -63,6 +75,11 @@ public class GymLocator extends Fragment implements OnMapReadyCallback {
 
 
                 });
+
+
+
+
+
             }
         }); // End of Async Map
 
@@ -70,7 +87,13 @@ public class GymLocator extends Fragment implements OnMapReadyCallback {
         return view;
 
 
+
+
+
     } // End of onCreateView
+
+
+
 
 
     @Override

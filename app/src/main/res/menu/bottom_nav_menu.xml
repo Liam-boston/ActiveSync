@@ -34,6 +34,6 @@
     <!--    Gym Locator action item - Max of 5 items   -->
     <!--<item
         android:id="@+id/gym_item"
-        android:icon="@drawable/progress_icon"
-        android:title="@string/progress_icon_text"/>-->
+        android:icon="@drawable/locator_icon"
+        android:title="@string/gym_locator_text"/>-->
 </menu>
