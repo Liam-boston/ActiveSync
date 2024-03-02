@@ -37,6 +37,12 @@ android {
 
 dependencies {
 
+    // Adds support for RoomDB
+    // See: https://developer.android.com/training/data-storage/room/#kts
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
