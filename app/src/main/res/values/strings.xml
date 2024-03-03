@@ -4,7 +4,21 @@
     <string name="homepage_greeting">Good morning, &lt;UserName&gt;!</string>
     <string name="recovery_status_greeting">Recovery Status</string>
     <string name="calendar_greeting">Calendar View</string>
-    <string name="log_workout_greeting">Log Workout</string>
+    <string name="log_workout_greeting">New Workout</string>
+    <string name="log_workout_description">Choose an exercise type and enter date and duration details, then fill out as many sets as you&apos;d like below before hitting &quot;submit&quot;.</string>
+    <string name="exercise_type">Exercise Type</string>
+    <string name="exercise_type_hint">Dumbbell Incline Bench Press</string>
+    <string name="workout_date">Date</string>
+    <string name="date_hint">3/1/2024</string>
+    <string name="workout_duration">Duration</string>
+    <string name="duration_hint">30m</string>
+    <string name="submit_workout">Submit</string>
+    <string name="discard_workout">Discard</string>
+    <string name="num_reps">Repetitions</string>
+    <string name="num_reps_hint">5</string>
+    <string name="weight_hint">70 lbs</string>
+    <string name="weight">Weight</string>
+    <string name="set_number">Set 1</string>
     <string name="track_progress_greeting">Track Progress</string>
 
     <!--    Button Text    -->
@@ -28,5 +42,4 @@
 
     <!-- Google Maps API KEY -->
     <string name="map_api_key">AIzaSyD4mlT6JrAHteKMALv9yK7WeNjqWq3w2Hs</string>
-
 </resources>
