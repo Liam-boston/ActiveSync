@@ -15,4 +15,11 @@ public class ExerciseTypeWithMuscleGroups {
             associateBy = @Junction(ExerciseTypeMuscleGroupCrossRef.class)
     )
     public List<MuscleGroup> muscleGroups;
+
+    public ExerciseTypeWithMuscleGroups() {}
+
+    public ExerciseTypeWithMuscleGroups(ExerciseType type, List<MuscleGroup> muscleGroups) {
+        this.exerciseType = type;
+        this.muscleGroups = muscleGroups;
+    }
 }

@@ -15,11 +15,18 @@ public class Weight {
      */
     public WeightUnit unit;
 
+    public Weight() {}
+
+    public Weight(WeightUnit unit, double amount) {
+        this.unit = unit;
+        this.amount = amount;
+    }
+
     /**
      * Returns a human-readable string representation of this instance.
      */
     public String toString() {
-        return weightUnitAsSuffix(this.unit, this.amount) + " " + this.amount;
+        return this.amount + " " + weightUnitAsSuffix(this.unit, this.amount);
     }
 
     /**

@@ -21,4 +21,11 @@ public class ExerciseType {
      * The name of this exercise, e.g. "pull-ups".
      */
     public String name;
+
+    public ExerciseType() {}
+
+    public ExerciseType(Long id, String name) {
+        if (id != null) this.exerciseTypeId = id;
+        if (name != null) this.name = name;
+    }
 }

@@ -9,4 +9,12 @@ public class ExerciseTypeMuscleGroupCrossRef {
     public long exerciseTypeId;
     @ColumnInfo(name = "muscle_group_id")
     public long muscleGroupId;
+
+    public ExerciseTypeMuscleGroupCrossRef () {}
+
+
+    public ExerciseTypeMuscleGroupCrossRef (ExerciseType exerciseType, MuscleGroup muscleGroup) {
+        this.exerciseTypeId = exerciseType.exerciseTypeId;
+        this.muscleGroupId = muscleGroup.muscleGroupId;
+    }
 }

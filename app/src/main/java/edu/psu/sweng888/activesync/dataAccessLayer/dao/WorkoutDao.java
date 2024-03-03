@@ -43,4 +43,7 @@ public interface WorkoutDao {
     @Query("SELECT * FROM workout WHERE user_id = :userId")
     List<Workout> getWorkoutsForUser(long userId);
 
+    @Query("SELECT workout_id FROM workout WHERE user_id = :userId")
+    long[] getWorkoutIdsForUser(long userId);
+
 }

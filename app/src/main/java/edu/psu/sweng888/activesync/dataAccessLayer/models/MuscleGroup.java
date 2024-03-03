@@ -29,4 +29,12 @@ public class MuscleGroup {
      */
     @ColumnInfo(name = "recovery_rate")
     public double recoveryRate;
+
+    public MuscleGroup() {}
+
+    public MuscleGroup(Long id, String name, Double recoveryRate) {
+        if (id != null) this.muscleGroupId = id;
+        if (name != null) this.name = name;
+        if (recoveryRate != null) this.recoveryRate = recoveryRate;
+    }
 }

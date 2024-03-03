@@ -42,4 +42,21 @@ public class Workout {
      */
     @ColumnInfo(name = "duration_minutes")
     public int durationMinutes;
+
+    public Workout() {}
+
+    public Workout(
+            Long workoutId,
+            Long userId,
+            Long exerciseTypeId,
+            Date date,
+            Integer durationMinutes
+    ) {
+        if (workoutId != null) this.workoutId = workoutId;
+        if (userId != null) this.userId = userId;
+        if (exerciseTypeId != null) this.exerciseTypeId = exerciseTypeId;
+        if (date != null) this.date = date;
+        if (durationMinutes != null) this.durationMinutes = durationMinutes;
+    }
+
 }

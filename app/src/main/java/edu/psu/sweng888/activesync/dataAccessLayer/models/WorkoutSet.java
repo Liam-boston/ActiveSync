@@ -15,7 +15,7 @@ public class WorkoutSet {
     /**
      * The unique identifier of this workout set.
      */
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "workout_set_id")
     public long workoutSetId;
 
@@ -35,4 +35,23 @@ public class WorkoutSet {
      */
     @Embedded
     public Weight weight;
+
+    public WorkoutSet() {}
+
+    public WorkoutSet(
+            Long workoutSetId,
+            Long workoutId,
+            Integer reps,
+            Weight weight
+    ) {
+        if (workoutSetId != null) this.workoutSetId = workoutSetId;
+        if (workoutId != null) this.workoutId = workoutId;
+        if (reps != null) this.reps = reps;
+        if (weight != null) this.weight = weight;
+    }
+
+    public WorkoutSet(int reps, Weight weight) {
+        this.reps = reps;
+        this.weight = weight;
+    }
 }
