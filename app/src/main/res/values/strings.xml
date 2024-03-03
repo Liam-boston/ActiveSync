@@ -5,7 +5,7 @@
     <string name="recovery_status_greeting">Recovery Status</string>
     <string name="calendar_greeting">Calendar View</string>
     <string name="log_workout_greeting">New Workout</string>
-    <string name="log_workout_description">Choose an exercise type and enter date and duration details, then fill out as many sets as you&apos;d like below before hitting &quot;submit&quot;.</string>
+    <string name="log_workout_description">Choose an exercise type and enter date and duration details, then fill out as many sets as you\'d like below before hitting \"submit\".</string>
     <string name="exercise_type">Exercise Type</string>
     <string name="exercise_type_hint">Dumbbell Incline Bench Press</string>
     <string name="workout_date">Date</string>
