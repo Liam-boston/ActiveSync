@@ -4,6 +4,7 @@ import androidx.room.Embedded;
 import androidx.room.Junction;
 import androidx.room.Relation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExerciseTypeWithMuscleGroups {
@@ -16,10 +17,18 @@ public class ExerciseTypeWithMuscleGroups {
     )
     public List<MuscleGroup> muscleGroups;
 
-    public ExerciseTypeWithMuscleGroups() {}
+    public ExerciseTypeWithMuscleGroups() {
+        exerciseType = new ExerciseType();
+        muscleGroups = new ArrayList<>();
+    }
 
     public ExerciseTypeWithMuscleGroups(ExerciseType type, List<MuscleGroup> muscleGroups) {
         this.exerciseType = type;
         this.muscleGroups = muscleGroups;
+    }
+
+    @Override
+    public String toString() {
+        return this.exerciseType.toString();
     }
 }

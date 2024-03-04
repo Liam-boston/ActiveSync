@@ -21,6 +21,8 @@ public final class DefaultMuscleGroups {
     public static final MuscleGroup Biceps = new MuscleGroup(1l, "Biceps", 0.05);
 
     public static final MuscleGroup Chest = new MuscleGroup(2l, "Chest", 0.05);
+    public static final MuscleGroup Back = new MuscleGroup(3l, "Back", 0.05);
+
 
     // NOTE: This class does not have an "initialize" method like the "DefaultExerciseTypes" class
     //       because the aforementioned class's "initialize" method creates entries in the database

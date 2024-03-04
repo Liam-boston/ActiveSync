@@ -28,4 +28,9 @@ public class ExerciseType {
         if (id != null) this.exerciseTypeId = id;
         if (name != null) this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return this.name == null ? "" : this.name;
+    }
 }

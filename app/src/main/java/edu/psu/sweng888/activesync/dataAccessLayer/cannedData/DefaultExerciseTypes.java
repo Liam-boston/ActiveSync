@@ -22,6 +22,34 @@ public class DefaultExerciseTypes {
     // Prevent instantiation
     private DefaultExerciseTypes() {}
 
+    // =============================================================================================
+    // ====== EDIT THIS AREA ONLY TO ADD NEW EXERCISE TYPES ========================================
+    // =============================================================================================
+    public static final ExerciseType PullUps = new ExerciseType(1l, "Pull-ups");
+
+    public static final ExerciseType PushUps = new ExerciseType(2l, "Push-ups");
+
+    // NOTE: When adding a new default exercise type, register it in the method call below with the
+    //       muscle groups that it targets!
+    public static List<Pair<ExerciseType, MuscleGroup[]>> getDefaultExerciseTypesWithAssociatedMuscleGroups() {
+        return registerDefaults(
+            exerciseTypeWithGroups(
+                PullUps,
+                DefaultMuscleGroups.Biceps,
+                DefaultMuscleGroups.Chest
+            ),
+            exerciseTypeWithGroups(
+                PushUps,
+                DefaultMuscleGroups.Chest,
+                DefaultMuscleGroups.Back
+            )
+        );
+    }
+    // =============================================================================================
+    // =============================================================================================
+    // =============================================================================================
+
+
     private static List<Pair<ExerciseType, MuscleGroup[]>> registerDefaults(
         Pair<ExerciseType, MuscleGroup[]>... associations
     ) {
@@ -39,19 +67,6 @@ public class DefaultExerciseTypes {
         return new Pair<>(exerciseType, groups);
     }
 
-    // NOTE: When adding a new default exercise type, register it in the method call below with the
-    //       muscle groups that it targets!
-    public static List<Pair<ExerciseType, MuscleGroup[]>> getDefaultExerciseTypesWithAssociatedMuscleGroups() {
-        return registerDefaults(
-            exerciseTypeWithGroups(
-                PullUps,
-                DefaultMuscleGroups.Biceps,
-                DefaultMuscleGroups.Chest
-            )
-        );
-    }
-
-    public static final ExerciseType PullUps = new ExerciseType(1l, "Pull-ups");
 
     public static void initialize(ActiveSyncDatabase db) {
         // TODO: Should we try to make sure this method is only called once per application run?
