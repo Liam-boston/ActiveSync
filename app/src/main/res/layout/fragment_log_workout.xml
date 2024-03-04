@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginBottom="8dp"
+        >
 
         <TextView
             android:id="@+id/log_workout_title"
@@ -40,14 +41,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/log_workout_exercise_type_input"
+        <LinearLayout
+            android:id="@+id/log_workout_exercise_type_input_area"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:hint="Exercise Type"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            >
+
+            <TextView
+                android:id="@+id/log_workout_exercise_type_input_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Exercise Type"
+                android:textStyle="italic"
+                />
+
+            <Spinner
+                android:id="@+id/log_workout_exercise_type_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_marginTop="8dp"
+                />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/log_workout_date_duration_area"
@@ -55,28 +73,62 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/log_workout_date_input"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:hint="Choose date..."
-                android:layout_marginRight="32dp"
-                android:focusable="false"
-                />
+                android:orientation="vertical"
+                android:layout_marginRight="16dp"
+                >
 
-            <EditText
-                android:id="@+id/log_workout_duration_input"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/log_workout_date_input_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textStyle="italic"
+                    />
+
+                <EditText
+                    android:id="@+id/log_workout_date_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:hint="Click to choose..."
+                    android:inputType="text"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number"
-                android:hint="Duration (mins)"
-                android:layout_marginLeft="32dp"
-                />
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp"
+                >
+
+                <TextView
+                    android:id="@+id/log_workout_duration_input_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Duration (min)"
+                    android:textStyle="italic"
+                    />
+
+                <EditText
+                    android:id="@+id/log_workout_duration_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Duration (mins)"
+                    android:inputType="number"
+                    android:selectAllOnFocus="true"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

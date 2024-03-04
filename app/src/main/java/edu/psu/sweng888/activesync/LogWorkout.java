@@ -43,9 +43,11 @@ public class LogWorkout extends Fragment {
         // Get references to view elements and other supporting items
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         EditText workoutDateInput = view.findViewById(R.id.log_workout_date_input);
+        EditText workoutDurationInput = view.findViewById(R.id.log_workout_duration_input);
 
         // Set up any fields of the form with values that may already exist in the view model
         updateDateInputText(workoutDateInput);
+        updateDurationInputText(workoutDurationInput);
 
         // Set up RecyclerView with references to workout set items
         WorkoutSetAdapter workoutSetAdapter = new WorkoutSetAdapter(
@@ -87,16 +89,32 @@ public class LogWorkout extends Fragment {
                 );
         });
 
+        // Register an event that stores the value from the duration input in the model when the
+        // input loses focus.
+        workoutDurationInput.setOnFocusChangeListener((v, hasFocus) -> {
+            // Ignore events that result in us gaining focus
+            if (hasFocus) return;
+
+            // When we lose focus, we should be safe to use the input value to update the model.
+            viewModel.workout.durationMinutes = Integer.parseInt(
+                ((EditText) v).getText().toString()
+            );
+        });
+
 
         return view;
+    }
+
+    private void updateDurationInputText(EditText workoutDurationInput) {
+        if (viewModel == null || viewModel.workout == null) return;
+        workoutDurationInput.setText(String.valueOf(viewModel.workout.durationMinutes));
     }
 
     private static final DateFormat displayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private void updateDateInputText(EditText dateInput) {
         // Guard against unusable or unready date data
-        if (viewModel == null) return;
-        if (viewModel.workout.date == null) return;
+        if (viewModel == null || viewModel.workout.date == null) return;
 
         // Set the given date input's display text to the date in yyyy-MM-dd format.
         dateInput.setText(
