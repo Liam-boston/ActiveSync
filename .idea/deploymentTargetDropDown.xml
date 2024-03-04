@@ -2,35 +2,23 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="All Tests">
+      <entry key="ExerciseTypeDaoTests">
+        <State />
+      </entry>
+      <entry key="Tests in 'edu.psu.sweng888.activesync'">
+        <State />
+      </entry>
+      <entry key="UserDaoTests">
         <State />
       </entry>
       <entry key="app">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\lvb5483\.android\avd\Pixel_7.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-20T16:14:35.780158100Z" />
-          <targetsSelectedWithDialog>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\lvb5483\.android\avd\Pixel_7.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetsSelectedWithDialog>
-        </State>
+        <State />
+      </entry>
+      <entry key="exerciseTypeWithMuscleGroupsRoundTripTest()">
+        <State />
+      </entry>
+      <entry key="workoutEntryModelRoundtripTest()">
+        <State />
       </entry>
     </value>
   </component>
