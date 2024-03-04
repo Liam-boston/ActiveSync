@@ -29,6 +29,13 @@ public interface UserDao {
     long insert(User user);
 
     /**
+     * Ensures the record associated with the given user exists in the database. Use this method
+     * to seed the database with default and/or test data.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long ensureInserted(User user);
+
+    /**
      * Upserts a user record into the database.
      * @param user The user record to upsert.
      * @return The value of the record's "userId" column after the operation is complete.

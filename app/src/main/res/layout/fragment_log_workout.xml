@@ -162,16 +162,16 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/log_workout_submit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:layout_weight="1"
-                android:enabled="false"
+                android:enabled="true"
                 android:text="✅ Submit" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/log_workout_discard_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"

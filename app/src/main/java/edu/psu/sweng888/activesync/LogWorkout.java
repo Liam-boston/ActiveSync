@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import edu.psu.sweng888.activesync.adapters.WorkoutSetAdapter;
+import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseTypeWithMuscleGroups;
 import edu.psu.sweng888.activesync.dataAccessLayer.viewModels.WorkoutEntryModel;
@@ -50,6 +52,10 @@ public class LogWorkout extends Fragment {
         // TODO: For editing an existing entry, get the primary key (workout ID) of the entry to
         //       edit from intent data that started this activity.
 
+        // TODO: Temporary stopgap until authentication is implemented - set the user for the
+        //       workout to the "test user".
+        viewModel.currentUser = DefaultUsers.TestUser;
+
         // Get the list of available exercise types from the database. These will be used to
         // populate the dropdown with choices.
         ActiveSyncDatabase db = ActiveSyncApplication.getDatabase();
@@ -61,6 +67,7 @@ public class LogWorkout extends Fragment {
         EditText workoutDateInput = view.findViewById(R.id.log_workout_date_input);
         EditText workoutDurationInput = view.findViewById(R.id.log_workout_duration_input);
         Spinner exerciseTypeDropdown = view.findViewById(R.id.log_workout_exercise_type_input);
+        Button submitButton = view.findViewById(R.id.log_workout_submit_button);
 
         // Set up the exercise type dropdown with the options loaded from the database.
         ArrayAdapter<ExerciseTypeWithMuscleGroups> exerciseTypeDropdownAdapter = new ArrayAdapter<>(
@@ -154,6 +161,16 @@ public class LogWorkout extends Fragment {
         }
         exerciseTypeDropdown.setOnItemSelectedListener(new ExerciseTypeDropdownSelectionListener());
 
+        // Register an event listener that will cause the model to be saved to the database when
+        // the "submit" button is clicked.
+        submitButton.setOnClickListener(v -> {
+            // TODO: This reference resetting does not seem necessary.
+            WorkoutEntryModel persistedModel = persistModelState();
+            if (persistedModel != null) {
+                viewModel = persistedModel;
+            }
+        });
+
 
         return view;
     }
@@ -199,4 +216,34 @@ public class LogWorkout extends Fragment {
             )
         );
     }
+
+    private void showLongToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private WorkoutEntryModel persistModelState() {
+        // Guard against conditions that make the model invalid
+        if (viewModel == null) return null;
+
+        // Show validation messages for invalid fields
+        if (viewModel.workout.date == null) {
+            showLongToast("⚠ Please set a date before saving.");
+            return null;
+        }
+        if (viewModel.sets.size() < 1) {
+            showLongToast("⚠ Please create at least one set before saving.");
+            return null;
+        }
+        if (viewModel.currentUser == null) {
+            showLongToast("⚠ You must be logged in to save workouts!");
+            return null;
+        }
+
+        // Attempt to persist the model to the database. On success, show a toast alerting the user
+        // that their data has been saved.
+        WorkoutEntryModel persisted = viewModel.persistToDatabase(ActiveSyncApplication.getDatabase());
+        showLongToast("Workout saved, way to go! 🎉");
+        return persisted;
+    }
+
 }

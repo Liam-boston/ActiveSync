@@ -115,7 +115,7 @@ public class WorkoutEntryModel {
         return model;
     }
 
-    public void persistToDatabase(ActiveSyncDatabase db) {
+    public WorkoutEntryModel persistToDatabase(ActiveSyncDatabase db) {
         // Persist the workout record first and foremost, since other persisted records will need
         // to reference its ID.
         this.workout.exerciseTypeId = this.exerciseType.exerciseType.exerciseTypeId;
@@ -128,5 +128,6 @@ public class WorkoutEntryModel {
             set.workoutId = this.workout.workoutId;
             set.workoutSetId = setDao.upsert(set);;
         }
+        return this;
     }
 }
