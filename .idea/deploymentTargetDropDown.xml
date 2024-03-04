@@ -8,10 +8,10 @@
       <entry key="Tests in 'edu.psu.sweng888.activesync'">
         <State />
       </entry>
-      <entry key="UserDaoTests">
+      <entry key="app">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="defaultExerciseTypeInitializationIsIdempotent()">
         <State />
       </entry>
       <entry key="exerciseTypeWithMuscleGroupsRoundTripTest()">
