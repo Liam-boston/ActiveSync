@@ -1,152 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".LogWorkout">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="5dp"
-        android:text="@string/log_workout_greeting"
-        android:textAlignment="center"
-        android:textSize="40sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="@string/log_workout_description"
-        android:textAlignment="center"
-        android:textSize="14sp" />
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:id="@+id/log_workout_title_area"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="16dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/log_workout_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/exercise_type"
+            android:padding="4dp"
+            android:text="New Workout"
+            android:textAlignment="center"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/log_workout_instructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="Choose an exercise type and enter date and duration details, then fill out as many sets as you'd like below before hitting 'submit'."
+            android:textAlignment="center"
+            android:textSize="12sp"
             android:textStyle="italic" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/log_workout_exercise_type_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <EditText
-            android:id="@+id/exercise_type_edit_text"
+            android:id="@+id/log_workout_exercise_type_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="no"
-            android:ems="14"
-            android:hint="@string/exercise_type_hint"
-            android:inputType="text" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
+            android:ems="10"
+            android:inputType="text"
+            android:hint="Exercise Type"
+            />
 
         <LinearLayout
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/workout_date"
-                android:textStyle="italic" />
-
-            <EditText
-                android:id="@+id/date_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="14"
-                android:hint="@string/date_hint"
-                android:inputType="date" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/workout_duration"
-                android:textStyle="italic" />
-
-            <EditText
-                android:id="@+id/duration_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="14"
-                android:hint="@string/duration_hint"
-                android:inputType="time" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
-
-        <ListView
-            android:id="@+id/completed_sets_list_view"
+            android:id="@+id/log_workout_date_duration_area"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:animationCache="false"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:scrollingCache="false"
-            android:smoothScrollbar="true"
-            tools:listitem="@layout/list_view_item" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/log_workout_date_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text"
+                android:hint="Choose date..."
+                android:layout_marginRight="32dp"
+                android:focusable="false"
+                />
+
+            <EditText
+                android:id="@+id/log_workout_duration_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number"
+                android:hint="Duration (mins)"
+                android:layout_marginLeft="32dp"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/log_workout_set_entry_area"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        >
 
         <Button
-            android:id="@+id/submit_workout"
-            android:layout_width="145dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/submit_workout"
-            android:textAlignment="center" />
+            android:id="@+id/log_workout_new_set_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="➕ New Set"
+            />
 
-        <Button
-            android:id="@+id/discard_workout"
-            android:layout_width="145dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/discard_workout"
-            android:textAlignment="center" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/log_workout_set_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/log_workout_action_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="✅ Submit" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="❌ Discard" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
