@@ -95,37 +95,38 @@
             android:text="➕ New Set"
             />
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/log_workout_set_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </HorizontalScrollView>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            />
 
         <LinearLayout
             android:id="@+id/log_workout_action_area"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="✅ Submit"
                 android:layout_marginRight="16dp"
+                android:layout_weight="1"
                 android:enabled="false"
-                />
+                android:text="✅ Submit" />
 
             <Button
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="❌ Discard"
                 android:layout_marginLeft="16dp"
+                android:layout_weight="1"
                 android:enabled="false"
-                />
+                android:text="❌ Discard" />
         </LinearLayout>
 
     </LinearLayout>
