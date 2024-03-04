@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "927277133491",
+    "project_id": "activesync-ba565",
+    "storage_bucket": "activesync-ba565.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927277133491:android:ba218f91c111a669150ac6",
+        "android_client_info": {
+          "package_name": "edu.psu.sweng888.activesync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBrMX1SERWW3nqtJTi6N9LM-2-qIa3U-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
