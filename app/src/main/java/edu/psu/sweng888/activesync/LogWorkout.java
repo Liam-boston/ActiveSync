@@ -32,6 +32,7 @@ public class LogWorkout extends Fragment {
     public LogWorkout() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -52,7 +53,16 @@ public class LogWorkout extends Fragment {
         // Set up RecyclerView with references to workout set items
         WorkoutSetAdapter workoutSetAdapter = new WorkoutSetAdapter(
             viewModel.workout.workoutId,
-            viewModel.sets
+            viewModel.sets,
+            addedSet -> {
+                viewModel.sets.add(addedSet);
+            },
+            (updatedPosition, updatedSet) -> {
+                viewModel.sets.set(updatedPosition, updatedSet);
+            },
+            (deletedPosition, deletedSet) -> {
+                viewModel.sets.remove(deletedPosition);
+            }
         );
         RecyclerView recyclerView = view.findViewById(R.id.log_workout_set_list);
         recyclerView.setAdapter(workoutSetAdapter);
@@ -65,11 +75,7 @@ public class LogWorkout extends Fragment {
         // adapter and scrolls the new item into view.
         Button addSetButton = view.findViewById(R.id.log_workout_new_set_button);
         addSetButton.setOnClickListener(v -> {
-            viewModel.sets.add(
-                workoutSetAdapter.addBlankSet(
-                    viewModel.workout.workoutId
-                )
-            );
+            workoutSetAdapter.addBlankSet(viewModel.workout.workoutId);
             recyclerView.scrollToPosition(viewModel.sets.size()); // Scroll to end
         });
 
