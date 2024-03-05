@@ -37,4 +37,13 @@ public abstract class WorkoutSetDao extends AbstractUpsertingDao<WorkoutSet> {
 
     @Query("DELETE FROM workoutset")
     public abstract void wipe();
+
+
+    /**
+     * Deletes the sets associated with the given workout. Used to ensure that upserted
+     * WorkoutEntryModel view models always have the most up-to-date set information since a user
+     * can delete sets locally before syncing with the database.
+     */
+    @Query("DELETE FROM workoutset WHERE workout_id = :workoutId")
+    public abstract int deleteSetsForWorkoutId(long workoutId);
 }

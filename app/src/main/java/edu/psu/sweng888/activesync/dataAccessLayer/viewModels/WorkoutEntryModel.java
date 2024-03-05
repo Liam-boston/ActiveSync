@@ -132,6 +132,7 @@ public class WorkoutEntryModel {
         // For each set included in this workout, update the reference to the workout ID and
         // persist to the database.
         WorkoutSetDao workoutSetDao = db.workoutSetDao();
+        workoutSetDao.deleteSetsForWorkoutId(this.workout.workoutId); // TODO: Make this smarter and only delete the records that are no longer associated with this workout model.
         for (WorkoutSet set : this.sets) {
             set.workoutId = this.workout.workoutId;
             set.workoutSetId = workoutSetDao.upsert(set);
