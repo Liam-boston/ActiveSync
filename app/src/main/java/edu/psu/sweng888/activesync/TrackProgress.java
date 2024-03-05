@@ -17,6 +17,7 @@ import java.util.List;
 import edu.psu.sweng888.activesync.adapters.DebuggingTextItemAdapter;
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
+import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.Workout;
 import edu.psu.sweng888.activesync.dataAccessLayer.viewModels.WorkoutEntryModel;
 
@@ -37,9 +38,10 @@ public class TrackProgress extends Fragment {
         // The logic in this debugging block is just used for debugging another area of the app and
         // can be abandoned once this screen has an actual implementation.
         try {
+            User activeUser = ActiveSyncApplication.getActiveUser();
             ArrayList<WorkoutEntryModel> workoutModels = WorkoutEntryModel.allFromDatabaseByUser(
                 ActiveSyncApplication.getDatabase(),
-                DefaultUsers.TestUser
+                activeUser == null ? DefaultUsers.TestUser : activeUser
             );
             ListView debuggingList = view.findViewById(R.id.dbg_saved_workouts_list);
             debuggingListAdapter = new DebuggingTextItemAdapter<>(getContext(), workoutModels);

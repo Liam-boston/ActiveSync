@@ -2,6 +2,7 @@ package edu.psu.sweng888.activesync.dataAccessLayer.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 /**
@@ -20,7 +21,7 @@ public class User {
     /**
      * The user's display name.
      */
-    public String name;
+    public String name; // TODO: Add a unique constraint to this column
 
     public User() { }
 

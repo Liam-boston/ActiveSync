@@ -18,7 +18,7 @@ import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
  * Data access object for the "User" model.
  */
 @Dao
-public interface UserDao {
+public abstract class UserDao {
 
     /**
      * Inserts a new user record into the database.
@@ -26,14 +26,14 @@ public interface UserDao {
      * @return The auto-generated value of inserted record's "userId" column.
      */
     @Insert
-    long insert(User user);
+    public abstract long insert(User user);
 
     /**
      * Ensures the record associated with the given user exists in the database. Use this method
      * to seed the database with default and/or test data.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    long ensureInserted(User user);
+    public abstract long ensureInserted(User user);
 
     /**
      * Upserts a user record into the database.
@@ -41,35 +41,35 @@ public interface UserDao {
      * @return The value of the record's "userId" column after the operation is complete.
      */
     @Upsert
-    long upsert(User user);
+    public abstract long upsert(User user);
 
     /**
      * Inserts an arbitrary number of user records into the database.
      * @param users The user records to insert.
      */
     @Insert
-    long[] insertAll(User... users);
+    public abstract long[] insertAll(User... users);
 
     /**
      * Deletes the given user record from the database.
      * @param user The user record to delete.
      */
     @Delete
-    void Delete(User user);
+    public abstract void delete(User user);
 
     /**
      * Updates the given user record in the database.
      * @param user The user record to update.
      */
     @Update
-    void update(User user);
+    public abstract void update(User user);
 
     /**
      * Queries the database for a list of all user records.
      * @return A list containing all existing user records.
      */
     @Query("SELECT * FROM user")
-    List<User> getAll();
+    public abstract List<User> getAll();
 
     /**
      * Queries the database for a user having a specific ID.
@@ -77,8 +77,22 @@ public interface UserDao {
      * @return The user associated with the given user ID.
      */
     @Query("SELECT * FROM user WHERE user.user_id = :userId")
-    User getById(long userId);
+    public abstract User getById(long userId);
 
     @Query("DELETE FROM user")
-    void wipe();
+    public abstract void wipe();
+
+    @Query("SELECT * FROM user WHERE user.name = :name LIMIT 1") // TODO: Remove the LIMIT 1 once there is a UNIQUE constraint on the name column.
+    public abstract User getByName(String name);
+
+    public User createOrReturnForFirebaseDisplayName(String displayName) {
+        // Return the existing user if found
+        User existingUser = getByName(displayName);
+        if (existingUser != null) return existingUser;
+
+        // Otherwise, return the newly created user
+        User createdUser = new User(null, displayName);
+        createdUser.userId = insert(createdUser);
+        return createdUser;
+    }
 }

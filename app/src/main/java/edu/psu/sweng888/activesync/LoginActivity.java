@@ -17,10 +17,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginActivity extends AppCompatActivity {
+
+    public static final String INTENT_EXTRA_DISPLAY_NAME = "user_display_name";
+    public static final String INTENT_EXTRA_EMAIL_ADDRESS = "user_email_address";
 
     private FirebaseAuth auth;
     private EditText loginEmail, loginPassword;
@@ -51,7 +54,20 @@ public class LoginActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
                                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(LoginActivity.this, MainActivity.class ));
+                                        Intent mainViewIntent = new Intent(LoginActivity.this, MainActivity.class );
+
+                                        // Get details from the logged-in user to create a user in our local database
+                                        // TODO: Should we be able to store data in Firebase later?
+                                        FirebaseUser user = authResult.getUser();
+                                        mainViewIntent.putExtra(
+                                            INTENT_EXTRA_DISPLAY_NAME,
+                                            user == null ? "<Unknown>" : user.getDisplayName()
+                                        );
+                                        mainViewIntent.putExtra(
+                                            INTENT_EXTRA_EMAIL_ADDRESS,
+                                            user == null ? "<Unknown>" : user.getEmail()
+                                        );
+                                        startActivity(mainViewIntent);
                                         finish();
 
                                     }

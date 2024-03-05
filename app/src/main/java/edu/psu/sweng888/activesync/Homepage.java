@@ -1,5 +1,6 @@
 package edu.psu.sweng888.activesync;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
 
 public class Homepage extends Fragment {
     // declare UI element references
@@ -36,6 +39,31 @@ public class Homepage extends Fragment {
         calendarViewButton = view.findViewById(R.id.calendar_view_button);
         recoveryStatusButton = view.findViewById(R.id.recovery_status_button);
         trackProgressButton = view.findViewById(R.id.track_progress_button);
+
+        // Get user name and email address data from login intent
+        Intent triggeringIntent = getActivity().getIntent();
+        String displayName = "";
+        if (triggeringIntent != null) {
+            displayName = triggeringIntent.getStringExtra(LoginActivity.INTENT_EXTRA_DISPLAY_NAME);
+            if (displayName == null || displayName.length() < 1 || displayName.equals("<Unknown>")) {
+                displayName = triggeringIntent.getStringExtra(LoginActivity.INTENT_EXTRA_EMAIL_ADDRESS);
+            }
+        }
+        String greetingText = "Good morning"; // TODO: Set this according to the time of day
+        if (displayName != null && displayName.length() > 0) {
+            greetingText += ", " + displayName;
+        }
+        greetingText += "!";
+        greetingTextView.setText(greetingText);
+
+        // Create a user for this display name in the database if there is not one already and set
+        // the user as the active user.
+        ActiveSyncApplication.setActiveUser(
+            ActiveSyncApplication
+                .getDatabase()
+                .userDao()
+                .createOrReturnForFirebaseDisplayName(displayName)
+        );
 
         //Max 5 items in navBar
         gymLocatorButton = view.findViewById(R.id.gym_locator_button);

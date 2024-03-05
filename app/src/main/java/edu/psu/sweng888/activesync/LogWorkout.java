@@ -25,6 +25,7 @@ import edu.psu.sweng888.activesync.adapters.WorkoutSetAdapter;
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseTypeWithMuscleGroups;
+import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
 import edu.psu.sweng888.activesync.dataAccessLayer.viewModels.WorkoutEntryModel;
 import edu.psu.sweng888.activesync.dialogs.DatePickerDialogFragment;
 import edu.psu.sweng888.activesync.eventListeners.DateSetListener;
@@ -51,9 +52,9 @@ public class LogWorkout extends Fragment {
         // TODO: For editing an existing entry, get the primary key (workout ID) of the entry to
         //       edit from intent data that started this activity.
 
-        // TODO: Temporary stopgap until authentication is implemented - set the user for the
-        //       workout to the "test user".
-        viewModel.currentUser = DefaultUsers.TestUser;
+        // Link the active user to the workout being created.
+        User activeUser = ActiveSyncApplication.getActiveUser();
+        viewModel.currentUser = activeUser == null ? DefaultUsers.TestUser : activeUser;
 
         // Get the list of available exercise types from the database. These will be used to
         // populate the dropdown with choices.

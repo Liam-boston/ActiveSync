@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultExerciseTypes;
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
+import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
 
 public class ActiveSyncApplication extends Application {
 
@@ -22,6 +23,8 @@ public class ActiveSyncApplication extends Application {
     public static ActiveSyncDatabase getDatabase() {
         return database;
     }
+
+    private static User activeUser;
 
     public static final DateFormat YearMonthDayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -53,4 +56,7 @@ public class ActiveSyncApplication extends Application {
         db.userDao().wipe();
         ActiveSyncApplication.initializeDatabase();
     }
+
+    public static User getActiveUser() { return activeUser; }
+    public static void setActiveUser(User activeUser) { ActiveSyncApplication.activeUser = activeUser;}
 }
