@@ -1,8 +1,14 @@
 package edu.psu.sweng888.activesync.dataAccessLayer.viewModels;
 
+import android.database.sqlite.SQLiteConstraintException;
+
+import androidx.room.Transaction;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.psu.sweng888.activesync.ActiveSyncApplication;
+import edu.psu.sweng888.activesync.dataAccessLayer.dao.WorkoutDao;
 import edu.psu.sweng888.activesync.dataAccessLayer.dao.WorkoutSetDao;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseTypeWithMuscleGroups;
@@ -116,17 +122,19 @@ public class WorkoutEntryModel {
     }
 
     public WorkoutEntryModel persistToDatabase(ActiveSyncDatabase db) {
-        // Persist the workout record first and foremost, since other persisted records will need
-        // to reference its ID.
+        // Persist the workout object first -- other items to be persisted need its ID to be
+        // linked to this view model correctly.
         this.workout.exerciseTypeId = this.exerciseType.exerciseType.exerciseTypeId;
         this.workout.userId = this.currentUser.userId;
-        this.workout.workoutId = db.workoutDao().upsert(this.workout);
+        WorkoutDao workoutDao = db.workoutDao();
+        this.workout.workoutId = workoutDao.upsert(this.workout);
 
-        // Persist the sets associated with this instance
-        WorkoutSetDao setDao = db.workoutSetDao();
+        // For each set included in this workout, update the reference to the workout ID and
+        // persist to the database.
+        WorkoutSetDao workoutSetDao = db.workoutSetDao();
         for (WorkoutSet set : this.sets) {
             set.workoutId = this.workout.workoutId;
-            set.workoutSetId = setDao.upsert(set);;
+            set.workoutSetId = workoutSetDao.upsert(set);
         }
         return this;
     }
@@ -137,6 +145,8 @@ public class WorkoutEntryModel {
             .append("     Workout ID: " + this.workout.workoutId + "\n")
             .append("           User: " + this.currentUser.name + "\n")
             .append("  Exercise Type: " + this.exerciseType.exerciseType.name + "\n")
+            .append("           Date: " + ActiveSyncApplication.YearMonthDayDateFormat.format(this.workout.date) + "\n")
+            .append("Duration (Mins): " + this.workout.durationMinutes + "\n")
             .append("Muscle Group(s): " + this.exerciseType.muscleGroups.stream().map(x -> x.name).reduce((a, b) -> a + ", " + b).get() + "\n")
             .append("      Num. Sets: " + this.sets.size() + "\n");
 

@@ -15,23 +15,26 @@ import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutSet;
  * Data access object interface that exposes operations on the "WorkoutSet" record type.
  */
 @Dao
-public interface WorkoutSetDao {
+public abstract class WorkoutSetDao extends AbstractUpsertingDao<WorkoutSet> {
+
+    public long getPrimaryKey(WorkoutSet workoutSet) {
+        return workoutSet.workoutSetId;
+    }
 
     @Insert
-    void insert(WorkoutSet workoutSet);
+    @Override
+    public abstract long insert(WorkoutSet workoutSet);
 
     @Update
-    void update(WorkoutSet workoutSet);
-
-    @Upsert
-    long upsert(WorkoutSet workoutSet);
+    @Override
+    public abstract int update(WorkoutSet workoutSet);
 
     @Delete
-    void delete(WorkoutSet workoutSet);
+    public abstract void delete(WorkoutSet workoutSet);
 
     @Query("SELECT * FROM workoutSet WHERE workout_id = :workoutId")
-    List<WorkoutSet> getSetsForWorkout(long workoutId);
+    public abstract List<WorkoutSet> getSetsForWorkout(long workoutId);
 
     @Query("DELETE FROM workoutset")
-    void wipe();
+    public abstract void wipe();
 }

@@ -1,5 +1,6 @@
 package edu.psu.sweng888.activesync.adapters;
 
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import edu.psu.sweng888.activesync.R;
 import edu.psu.sweng888.activesync.eventListeners.WorkoutSetAddListener;
 import edu.psu.sweng888.activesync.eventListeners.WorkoutSetChangeListener;
 import edu.psu.sweng888.activesync.eventListeners.WorkoutSetDeleteListener;
+import edu.psu.sweng888.activesync.utils.TextChangeListener;
 
 /**
  * RecyclerView adapter that handles the creation of ViewHolders and the binding of events
@@ -145,34 +147,38 @@ public class WorkoutSetAdapter extends RecyclerView.Adapter<WorkoutSetAdapter.Vi
             )
         );
 
+        WorkoutSetAdapter adapter = this; // Yikes, big jank.
+
         // TODO: Use actual two-way data binding instead of custom impl.:
         //       https://developer.android.com/topic/libraries/data-binding/two-way
         // Bind event handlers for the inputs to change the fields of the currently held model.
-        viewHolder.getNumRepsInput().setOnFocusChangeListener((v, hasFocus) -> {
-            // When the input loses focus, use the new value of the input to update the
-            // backing model
-            int index = viewHolder.getAdapterPosition();
-            if (!positionInRange(index)) return;
-            WorkoutSet set = this.sets.get(index);
-            if (!hasFocus) {
-                int previousReps = set.reps;
-                set.reps = Integer.parseInt(((EditText) v).getText().toString());
-                if (previousReps != set.reps) {
+        EditText numRepsInput = viewHolder.getNumRepsInput();
+        numRepsInput.addTextChangedListener(new TextChangeListener<EditText>(numRepsInput) {
+            @Override
+            public void handleTextChange(EditText target, Editable editable) {
+                int index = viewHolder.getAdapterPosition();
+                if (!positionInRange(index)) return;
+                WorkoutSet set = adapter.sets.get(index);
+
+                int latestReps = Integer.parseInt(editable.toString());
+                if (set.reps != latestReps) {
+                    set.reps = latestReps;
                     invokeChangeHandler(index, set);
                 }
             }
         });
 
-        viewHolder.getWeightAmountInput().setOnFocusChangeListener((v, hasFocus) -> {
-            // When the input loses focus, use the new value of the input to update the
-            // backing model
-            int index = viewHolder.getAdapterPosition();
-            if (!positionInRange(index)) return;
-            WorkoutSet set = this.sets.get(index);
-            if (!hasFocus) {
-                double previousAmount = set.weight.amount;
-                set.weight.amount = Double.parseDouble(((EditText) v).getText().toString());
-                if (previousAmount != set.weight.amount) {
+        EditText weightAmountInput = viewHolder.getWeightAmountInput();
+        weightAmountInput.addTextChangedListener(new TextChangeListener<EditText>(weightAmountInput) {
+            @Override
+            public void handleTextChange(EditText target, Editable editable) {
+                int index = viewHolder.getAdapterPosition();
+                if (!positionInRange(index)) return;
+                WorkoutSet set = adapter.sets.get(index);
+
+                double latestAmount = Double.parseDouble(editable.toString());
+                if (set.weight.amount != latestAmount) {
+                    set.weight.amount = latestAmount;
                     invokeChangeHandler(index, set);
                 }
             }

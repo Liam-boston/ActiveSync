@@ -181,6 +181,27 @@ public class WorkoutEntryModelTests {
                 )
             );
         }
+
+        // Test the "upsert" logic of our persistence helper by changing a few properties of our
+        // model and then persisting again. We then retrieve it once more and ensure that the
+        // pieces that we updated really did get updated in the database.
+        final int expectedUpdatedDuration = 45;
+        final int expectedFirstSetReps = 25;
+        final WeightUnit expectedLastSetUnit = WeightUnit.Kilograms;
+        workoutEntryModel.workout.durationMinutes = expectedUpdatedDuration;
+        workoutEntryModel.sets.get(0).reps = expectedFirstSetReps;
+        workoutEntryModel.sets.get(workoutEntryModel.sets.size() - 1).weight.unit = expectedLastSetUnit;
+        workoutEntryModel.persistToDatabase(db);
+
+        WorkoutEntryModel afterUpsert = WorkoutEntryModel.fromDatabaseByWorkoutId(
+            db,
+            workoutEntryModel.workout.workoutId
+        );
+        assertNotNull(afterUpsert);
+        assertEquals(workoutEntryModel.workout.workoutId, afterUpsert.workout.workoutId); // This fails with our current strategy!
+        assertEquals(expectedUpdatedDuration, afterUpsert.workout.durationMinutes);
+        assertEquals(expectedFirstSetReps, afterUpsert.sets.get(0).reps);
+        assertEquals(expectedLastSetUnit, afterUpsert.sets.get(afterUpsert.sets.size() - 1).weight.unit);
     }
 
     private static boolean equalByFields(ExerciseType a, ExerciseType b) {

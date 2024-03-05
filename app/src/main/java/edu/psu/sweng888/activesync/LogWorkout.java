@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Optional;
 
 import edu.psu.sweng888.activesync.adapters.WorkoutSetAdapter;
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
@@ -30,6 +28,7 @@ import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseTypeWithMuscle
 import edu.psu.sweng888.activesync.dataAccessLayer.viewModels.WorkoutEntryModel;
 import edu.psu.sweng888.activesync.dialogs.DatePickerDialogFragment;
 import edu.psu.sweng888.activesync.eventListeners.DateSetListener;
+import edu.psu.sweng888.activesync.utils.TextChangeListener;
 
 public class LogWorkout extends Fragment {
     // declare UI element references
@@ -128,16 +127,14 @@ public class LogWorkout extends Fragment {
                 );
         });
 
-        // Register an event that stores the value from the duration input in the model when the
-        // input loses focus.
-        workoutDurationInput.setOnFocusChangeListener((v, hasFocus) -> {
-            // Ignore events that result in us gaining focus
-            if (hasFocus) return;
-
-            // When we lose focus, we should be safe to use the input value to update the model.
-            viewModel.workout.durationMinutes = Integer.parseInt(
-                ((EditText) v).getText().toString()
-            );
+        workoutDurationInput.addTextChangedListener(new TextChangeListener<EditText>(workoutDurationInput) {
+            @Override
+            public void handleTextChange(EditText target, Editable editable) {
+                int latestValue = Integer.parseInt(editable.toString());
+                if (viewModel.workout.durationMinutes != latestValue) {
+                    viewModel.workout.durationMinutes = latestValue;
+                }
+            }
         });
 
         // Register an event listener that updates the view model with changes to the selected
@@ -163,14 +160,7 @@ public class LogWorkout extends Fragment {
 
         // Register an event listener that will cause the model to be saved to the database when
         // the "submit" button is clicked.
-        submitButton.setOnClickListener(v -> {
-            // TODO: This reference resetting does not seem necessary.
-            WorkoutEntryModel persistedModel = persistModelState();
-            if (persistedModel != null) {
-                viewModel = persistedModel;
-            }
-        });
-
+        submitButton.setOnClickListener(v -> persistModelState());
 
         return view;
     }
@@ -203,15 +193,13 @@ public class LogWorkout extends Fragment {
         workoutDurationInput.setText(String.valueOf(viewModel.workout.durationMinutes));
     }
 
-    private static final DateFormat displayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
     private void updateDateInputText(EditText dateInput) {
         // Guard against unusable or unready date data
         if (viewModel == null || viewModel.workout.date == null) return;
 
         // Set the given date input's display text to the date in yyyy-MM-dd format.
         dateInput.setText(
-            displayDateFormat.format(
+            ActiveSyncApplication.YearMonthDayDateFormat.format(
                 viewModel.workout.date
             )
         );
@@ -221,29 +209,28 @@ public class LogWorkout extends Fragment {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private WorkoutEntryModel persistModelState() {
+    private void persistModelState() {
         // Guard against conditions that make the model invalid
-        if (viewModel == null) return null;
+        if (viewModel == null) return;
 
         // Show validation messages for invalid fields
         if (viewModel.workout.date == null) {
             showLongToast("⚠ Please set a date before saving.");
-            return null;
+            return;
         }
         if (viewModel.sets.size() < 1) {
             showLongToast("⚠ Please create at least one set before saving.");
-            return null;
+            return;
         }
         if (viewModel.currentUser == null) {
             showLongToast("⚠ You must be logged in to save workouts!");
-            return null;
+            return;
         }
 
         // Attempt to persist the model to the database. On success, show a toast alerting the user
         // that their data has been saved.
         WorkoutEntryModel persisted = viewModel.persistToDatabase(ActiveSyncApplication.getDatabase());
         showLongToast("Workout saved, way to go! 🎉");
-        return persisted;
     }
 
 }

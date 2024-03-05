@@ -5,6 +5,9 @@ import android.app.Application;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultExerciseTypes;
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
@@ -19,6 +22,8 @@ public class ActiveSyncApplication extends Application {
     public static ActiveSyncDatabase getDatabase() {
         return database;
     }
+
+    public static final DateFormat YearMonthDayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public void onCreate() {

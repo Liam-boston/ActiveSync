@@ -3,29 +3,34 @@ package edu.psu.sweng888.activesync.dataAccessLayer.dao;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 import androidx.room.Upsert;
 
 import java.util.List;
-import java.util.Map;
 
 import edu.psu.sweng888.activesync.dataAccessLayer.models.Workout;
-import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutSet;
 
 /**
  * Data access object interface that exposes operations available for the "workout" record type.
  */
 @Dao
-public interface WorkoutDao {
+public abstract class WorkoutDao extends AbstractUpsertingDao<Workout> {
+
+    public long getPrimaryKey(Workout workout) {
+        return workout.workoutId;
+    }
 
     /**
      * Inserts the given workout record into the database.
      * @param workout The workout record to insert.
      */
     @Insert
-    void insert(Workout workout);
+    @Override
+    public abstract long insert(Workout workout);
 
-    @Upsert
-    long upsert(Workout workout);
+    @Update
+    @Override
+    public abstract int update(Workout workout);
 
     /**
      * Selects and returns a specific workout record by its ID.
@@ -33,7 +38,7 @@ public interface WorkoutDao {
      * @return The workout record associated with the given ID.
      */
     @Query("SELECT * FROM workout WHERE workout_id = :workoutId")
-    Workout getById(long workoutId);
+    public abstract Workout getById(long workoutId);
 
     /**
      * Returns the workouts created by the user with the given user ID.
@@ -41,11 +46,11 @@ public interface WorkoutDao {
      * @return A list of workouts created by the given user.
      */
     @Query("SELECT * FROM workout WHERE user_id = :userId")
-    List<Workout> getWorkoutsForUser(long userId);
+    public abstract List<Workout> getWorkoutsForUser(long userId);
 
     @Query("SELECT workout_id FROM workout WHERE user_id = :userId")
-    long[] getWorkoutIdsForUser(long userId);
+    public abstract long[] getWorkoutIdsForUser(long userId);
 
     @Query("DELETE FROM workout")
-    void wipe();
+    public abstract void wipe();
 }
