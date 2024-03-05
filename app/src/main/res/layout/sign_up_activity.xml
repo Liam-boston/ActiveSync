@@ -39,6 +39,7 @@
                 android:layout_marginRight="40dp"
                 android:drawablePadding="8dp"
                 android:hint="Email"
+                android:inputType="textEmailAddress"
                 android:padding="8dp"
                 android:textColor="@color/black" />
 
@@ -50,6 +51,7 @@
                 android:layout_marginRight="40dp"
                 android:drawablePadding="8dp"
                 android:hint="Password"
+                android:inputType="textPassword"
                 android:padding="8dp"
                 android:textColor="@color/black" />
 

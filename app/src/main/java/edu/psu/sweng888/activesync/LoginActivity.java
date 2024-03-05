@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         loginEmail = findViewById(R.id.login_email);
         loginPassword = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
-        //signupRedirectText = findViewById(R.id.signupRedirectText);
+        signupRedirectText = findViewById(R.id.signUpRedirectText);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
