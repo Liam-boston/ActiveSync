@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/material_dynamic_neutral10"
+        app:itemBackground="@color/colorPrimary"
         app:itemIconSize="24dp"
         app:itemIconTint="#2196F3"
         app:itemPaddingBottom="12dp"
