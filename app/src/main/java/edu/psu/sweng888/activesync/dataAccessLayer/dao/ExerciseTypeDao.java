@@ -61,4 +61,16 @@ public interface ExerciseTypeDao {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void ensureMuscleGroupLinkedToExerciseType(ExerciseTypeMuscleGroupCrossRef crossReference);
+
+    /**
+     * Deletes all entries from the exercise type table.
+     */
+    @Query("DELETE FROM exercisetype")
+    void wipeExerciseTypes();
+
+    /**
+     * Deletes all entries from the cross-reference table relating muscle groups to exercise types.
+     */
+    @Query("DELETE FROM exercisetypemusclegroupcrossref")
+    void wipeExerciseTypeMuscleGroupLinks();
 }

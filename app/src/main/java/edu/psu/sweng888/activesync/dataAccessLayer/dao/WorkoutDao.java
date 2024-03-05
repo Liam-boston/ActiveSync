@@ -46,4 +46,6 @@ public interface WorkoutDao {
     @Query("SELECT workout_id FROM workout WHERE user_id = :userId")
     long[] getWorkoutIdsForUser(long userId);
 
+    @Query("DELETE FROM workout")
+    void wipe();
 }

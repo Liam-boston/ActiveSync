@@ -6,14 +6,32 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".TrackProgress">
+    tools:context=".TrackProgress"
+    >
 
     <TextView
-        android:id="@+id/track_progress_greeting"
+        android:id="@+id/dbg_saved_workouts_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/track_progress_greeting"
+        android:text="[DEBUGGING VIEW]\nSAVED WORKOUTS"
+        android:fontFamily="monospace"
         android:textAlignment="center"
-        android:textSize="40sp" />
+        android:layout_margin="32dp"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        />
 
+    <Button
+        android:id="@+id/dbg_nuke_database_button"
+        android:text="💣 Nuke Database 💣"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+
+    <ListView
+        android:id="@+id/dbg_saved_workouts_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </LinearLayout>

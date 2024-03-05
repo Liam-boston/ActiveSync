@@ -78,4 +78,7 @@ public interface UserDao {
      */
     @Query("SELECT * FROM user WHERE user.user_id = :userId")
     User getById(long userId);
+
+    @Query("DELETE FROM user")
+    void wipe();
 }

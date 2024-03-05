@@ -31,4 +31,7 @@ public interface WorkoutSetDao {
 
     @Query("SELECT * FROM workoutSet WHERE workout_id = :workoutId")
     List<WorkoutSet> getSetsForWorkout(long workoutId);
+
+    @Query("DELETE FROM workoutset")
+    void wipe();
 }

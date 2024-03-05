@@ -54,4 +54,9 @@ public class WorkoutSet {
         this.reps = reps;
         this.weight = weight;
     }
+
+    @Override
+    public String toString() {
+        return reps + " reps @ " + (weight == null ? "???" : weight.toString());
+    }
 }

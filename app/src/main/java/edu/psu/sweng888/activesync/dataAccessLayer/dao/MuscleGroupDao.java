@@ -37,4 +37,7 @@ public interface MuscleGroupDao {
 
     @Query("SELECT * FROM musclegroup WHERE muscle_group_id = :muscleGroupId")
     MuscleGroup getById(long muscleGroupId);
+
+    @Query("DELETE FROM musclegroup")
+    void wipe();
 }

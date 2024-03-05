@@ -44,11 +44,11 @@ public class WorkoutEntryModel {
      * @return A list of WorkoutEntryModel instances representing all information about the given user's workouts.
      * @throws Exception Thrown when database accesses fail.
      */
-    public static List<WorkoutEntryModel> allFromDatabaseByUser(
+    public static ArrayList<WorkoutEntryModel> allFromDatabaseByUser(
         ActiveSyncDatabase db,
         User user
     ) throws Exception{
-        List<WorkoutEntryModel> models = new ArrayList<WorkoutEntryModel>();
+        ArrayList<WorkoutEntryModel> models = new ArrayList<WorkoutEntryModel>();
         for (long workoutId : db.workoutDao().getWorkoutIdsForUser(user.userId)) {
             models.add(
                 WorkoutEntryModel.fromDatabaseByWorkoutId(db, workoutId)
@@ -129,5 +129,22 @@ public class WorkoutEntryModel {
             set.workoutSetId = setDao.upsert(set);;
         }
         return this;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder()
+            .append("     Workout ID: " + this.workout.workoutId + "\n")
+            .append("           User: " + this.currentUser.name + "\n")
+            .append("  Exercise Type: " + this.exerciseType.exerciseType.name + "\n")
+            .append("Muscle Group(s): " + this.exerciseType.muscleGroups.stream().map(x -> x.name).reduce((a, b) -> a + ", " + b).get() + "\n")
+            .append("      Num. Sets: " + this.sets.size() + "\n");
+
+        String spacer = "           ";
+        for (WorkoutSet set : sets) {
+            builder.append(spacer + "-> " + set.toString() + "\n");
+        }
+
+        return builder.toString();
     }
 }

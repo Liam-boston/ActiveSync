@@ -6,6 +6,7 @@ import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultExerciseTypes;
+import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
 
 public class ActiveSyncApplication extends Application {
@@ -29,6 +30,22 @@ public class ActiveSyncApplication extends Application {
             )
             .allowMainThreadQueries() // TODO: Remove! Figure out how to make insertions happen on background thread.
             .build();
+        initializeDatabase();
+    }
+
+    public static void initializeDatabase() {
+        DefaultUsers.initialize(database);
         DefaultExerciseTypes.initialize(database);
+    }
+
+    public static void reinitializeDatabase() {
+        ActiveSyncDatabase db = ActiveSyncApplication.getDatabase();
+        db.workoutSetDao().wipe();
+        db.workoutDao().wipe();
+        db.exerciseTypeDao().wipeExerciseTypeMuscleGroupLinks();
+        db.exerciseTypeDao().wipeExerciseTypes();
+        db.muscleGroupDao().wipe();
+        db.userDao().wipe();
+        ActiveSyncApplication.initializeDatabase();
     }
 }
