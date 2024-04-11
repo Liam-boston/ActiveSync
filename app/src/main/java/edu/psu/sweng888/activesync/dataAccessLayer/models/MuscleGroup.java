@@ -37,4 +37,28 @@ public class MuscleGroup {
         if (name != null) this.name = name;
         if (recoveryRate != null) this.recoveryRate = recoveryRate;
     }
+    
+    public long getMuscleGroupId() {
+        return muscleGroupId;
+    }
+
+    public void setMuscleGroupId(long muscleGroupId) {
+        this.muscleGroupId = muscleGroupId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getRecoveryRate() {
+        return recoveryRate;
+    }
+
+    public void setRecoveryRate(double recoveryRate) {
+        this.recoveryRate = recoveryRate;
+    }
 }
