@@ -3,6 +3,7 @@
     <string name="app_name">ActiveSync</string>
     <string name="homepage_greeting">Good morning, &lt;UserName&gt;!</string>
     <string name="recovery_status_greeting">Recovery Status</string>
+    <string name="recovery_status_instructions">Check the recovery status of each muscle group and get an estimate of how long it will be before they are fully recovered.</string>
     <string name="calendar_greeting">Calendar View</string>
     <string name="log_workout_greeting">New Workout</string>
     <string name="log_workout_description">Choose an exercise type and enter date and duration details, then fill out as many sets as you\'d like below before hitting \"submit\".</string>
