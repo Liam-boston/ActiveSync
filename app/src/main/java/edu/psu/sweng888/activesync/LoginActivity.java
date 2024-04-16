@@ -19,6 +19,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import edu.psu.sweng888.activesync.databinding.LoginActivityBinding;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,8 +29,25 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private EditText loginEmail, loginPassword;
-    private TextView signupRedirectText;
+    private Button signupRedirectButton;
     private Button loginButton;
+
+    private void setIsLoading(boolean isLoading) {
+        if (isLoading) {
+            // Disable form when an operation is in progress
+            loginEmail.setEnabled(false);
+            loginPassword.setEnabled(false);
+            loginButton.setEnabled(false);
+            signupRedirectButton.setEnabled(false);
+        }
+        else {
+            // Enable form when we're not loading
+            loginEmail.setEnabled(true);
+            loginPassword.setEnabled(true);
+            loginButton.setEnabled(true);
+            signupRedirectButton.setEnabled(true);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,59 +58,64 @@ public class LoginActivity extends AppCompatActivity {
         loginEmail = findViewById(R.id.login_email);
         loginPassword = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
-        signupRedirectText = findViewById(R.id.signUpRedirectText);
+        signupRedirectButton = findViewById(R.id.signup_redirect_button);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = loginEmail.getText().toString();
-                String pass = loginPassword.getText().toString();
+        // Set initial loading state (i.e. "not loading"), which updates UI elements accordingly
+        setIsLoading(false);
 
-                if(!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    if (!pass.isEmpty()) {
-                        auth.signInWithEmailAndPassword(email, pass)
-                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                    @Override
-                                    public void onSuccess(AuthResult authResult) {
-                                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                        Intent mainViewIntent = new Intent(LoginActivity.this, MainActivity.class );
-
-                                        // Get details from the logged-in user to create a user in our local database
-                                        // TODO: Should we be able to store data in Firebase later?
-                                        FirebaseUser user = authResult.getUser();
-                                        mainViewIntent.putExtra(
-                                            INTENT_EXTRA_DISPLAY_NAME,
-                                            user == null ? "<Unknown>" : user.getDisplayName()
-                                        );
-                                        mainViewIntent.putExtra(
-                                            INTENT_EXTRA_EMAIL_ADDRESS,
-                                            user == null ? "<Unknown>" : user.getEmail()
-                                        );
-                                        startActivity(mainViewIntent);
-                                        finish();
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    } else {
-                        loginPassword.setError("Enter a password");
-                    }
-
-                } else if (email.isEmpty()) {
-                    loginEmail.setError("Enter an email");
-                } else {
-                    loginEmail.setError("Enter a password");
-                }
-            }
+        // Set up click handler for "not registered yet?" button that redirects to registration view
+        signupRedirectButton.setOnClickListener(view -> {
+            setIsLoading(true);
+            startActivity(
+                new Intent(
+                    LoginActivity.this,
+                    SignUpActivity.class
+                )
+            );
         });
-        signupRedirectText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+
+        loginButton.setOnClickListener(view -> {
+
+            String email = loginEmail.getText().toString();
+            String pass = loginPassword.getText().toString();
+
+            if(!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (!pass.isEmpty()) {
+                    setIsLoading(true);
+                    auth.signInWithEmailAndPassword(email, pass)
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    setIsLoading(false);
+                                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                    Intent mainViewIntent = new Intent(LoginActivity.this, MainActivity.class );
+
+                                    // Get details from the logged-in user to create a user in our local database
+                                    // TODO: Should we be able to store data in Firebase later?
+                                    FirebaseUser user = authResult.getUser();
+                                    mainViewIntent.putExtra(
+                                        INTENT_EXTRA_DISPLAY_NAME,
+                                        user == null ? "<Unknown>" : user.getDisplayName()
+                                    );
+                                    mainViewIntent.putExtra(
+                                        INTENT_EXTRA_EMAIL_ADDRESS,
+                                        user == null ? "<Unknown>" : user.getEmail()
+                                    );
+                                    startActivity(mainViewIntent);
+                                    finish();
+
+                                }
+                            }).addOnFailureListener(e -> {
+                                setIsLoading(false);
+                                Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                            });
+                } else {
+                    loginPassword.setError("Enter a password");
+                }
+            } else if (email.isEmpty()) {
+                loginEmail.setError("Enter an email");
+            } else {
+                loginEmail.setError("Enter a password");
             }
         });
     }

@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="@string/login_view_title"
                 android:textSize="36sp"
                 android:textAlignment="center"
                 android:textStyle="bold"
@@ -50,7 +50,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="40dp"
                 android:padding="8dp"
-                android:hint="Email"
+                android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black" />
@@ -62,7 +62,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="20dp"
                 android:padding="8dp"
-                android:hint="Password"
+                android:hint="@string/password_hint"
                 android:inputType="textPassword"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black" />
@@ -70,23 +70,23 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Login"
+                android:text="@string/login_button_text"
                 android:id="@+id/login_button"
                 android:textSize="18sp"
                 android:layout_marginTop="30dp"
-                app:cornerRadius = "20dp" />
+                app:cornerRadius = "20dp"
+                />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/signUpRedirectText"
-                android:text="Not yet registered? Sign Up"
-                android:layout_gravity="center"
-                android:padding="8dp"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
+            <Button
+                android:id="@+id/signup_redirect_button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/not_registered_yet"
+                android:textSize="14sp"
+                android:textAllCaps="false"
+                app:cornerRadius = "20dp"
+                style="?attr/borderlessButtonStyle"
+                />
 
         </LinearLayout>
 

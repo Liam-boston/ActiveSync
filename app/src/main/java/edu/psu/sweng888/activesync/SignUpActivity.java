@@ -23,8 +23,24 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private EditText signupEmail, signupPassword;
     private Button signupButton;
-    private TextView loginRedirectText;
+    private Button loginRedirectButton;
 
+    private void setIsLoading(boolean isLoading) {
+        if (isLoading) {
+            // Disable form when an operation is in progress
+            signupEmail.setEnabled(false);
+            signupPassword.setEnabled(false);
+            signupButton.setEnabled(false);
+            loginRedirectButton.setEnabled(false);
+        }
+        else {
+            // Enable form when we're not loading
+            signupEmail.setEnabled(true);
+            signupPassword.setEnabled(true);
+            signupButton.setEnabled(true);
+            loginRedirectButton.setEnabled(true);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,39 +53,40 @@ public class SignUpActivity extends AppCompatActivity {
         signupEmail = findViewById(R.id.signup_email);
         signupPassword = findViewById(R.id.signup_password);
         signupButton = findViewById(R.id.signup_button);
-        loginRedirectText = findViewById(R.id.loginRedirectText);
+        loginRedirectButton = findViewById(R.id.login_redirect_button);
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String user = signupEmail.getText().toString().trim();
-                String pass = signupPassword.getText().toString().trim();
+        setIsLoading(false);
 
-                if (user.isEmpty()){
-                    signupEmail.setError("Enter an email");
-                }
-                if(pass.isEmpty()){
-                    signupPassword.setError("Enter a password");
-                } else{
-                    auth.createUserWithEmailAndPassword(user, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(SignUpActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                            } else{
-                                Toast.makeText(SignUpActivity.this, "Signup Failed" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            }
+        loginRedirectButton.setOnClickListener(view -> {
+            setIsLoading(true);
+            startActivity(
+                new Intent(
+                    SignUpActivity.this, LoginActivity.class
+                )
+            );
         });
 
-        loginRedirectText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+
+        signupButton.setOnClickListener(view -> {
+            String user = signupEmail.getText().toString().trim();
+            String pass = signupPassword.getText().toString().trim();
+
+            if (user.isEmpty()){
+                signupEmail.setError("Enter an email");
+            }
+            if(pass.isEmpty()){
+                signupPassword.setError("Enter a password");
+            } else{
+                setIsLoading(true);
+                auth.createUserWithEmailAndPassword(user, pass).addOnCompleteListener(task -> {
+                    setIsLoading(false);
+                    if(task.isSuccessful()){
+                        Toast.makeText(SignUpActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                    } else{
+                        Toast.makeText(SignUpActivity.this, "Signup Failed" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
