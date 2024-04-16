@@ -92,53 +92,37 @@ public class Homepage extends Fragment {
         //Max 5 items in navBar
         gymLocatorButton = view.findViewById(R.id.gym_locator_button);
 
+        // FIXME: DEBUGGING - when the user clicks on the greeting text on the homepage, they are
+        //        redirected to the "debugging" view fragment. This view fragment contains developer
+        //        information and actions (e.g., database nuke) and should be removed before
+        //        delivering the app.
+        greetingTextView.setOnClickListener(__ -> startNewFragment(new DebuggingFragment()));
+
         /** * onClick listener for logWorkoutButton */
-        logWorkoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogWorkout logWorkoutFragment = new LogWorkout();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, logWorkoutFragment).commit();
-            }
-        });
+        logWorkoutButton.setOnClickListener(__ -> startNewFragment(new LogWorkout()));
 
         /** * onClick listener for calendarViewButton */
-        calendarViewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WorkoutCalendar workoutCalendarFragment = new WorkoutCalendar();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, workoutCalendarFragment).commit();
-            }
-        });
+        calendarViewButton.setOnClickListener(__ -> startNewFragment(new WorkoutCalendar()));
 
         /** * onClick listener for recoveryStatusButton */
-        recoveryStatusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecoveryStatus recoveryStatusFragment = new RecoveryStatus();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, recoveryStatusFragment).commit();
-            }
-        });
+        recoveryStatusButton.setOnClickListener(__ -> startNewFragment(new RecoveryStatus()));
 
         /** * onClick listener for trackProgressButton */
-        trackProgressButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TrackProgress trackProgressFragment = new TrackProgress();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, trackProgressFragment).commit();
-            }
-        });
+        trackProgressButton.setOnClickListener(__ -> startNewFragment(new TrackProgress()));
 
         /** * onClick listener for gymLocatorButton */
-        gymLocatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GymLocator gymLocatorFragment = new GymLocator();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, gymLocatorFragment).commit();
-            }
-        });
+        gymLocatorButton.setOnClickListener(__ -> startNewFragment(new GymLocator()));
 
 
         return view;
+    }
+
+    private void startNewFragment(Fragment fragment) {
+        getActivity()
+            .getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.nav_bar_container, fragment)
+            .commit();
     }
 
     @Override

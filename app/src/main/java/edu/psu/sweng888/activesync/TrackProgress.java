@@ -26,46 +26,13 @@ public class TrackProgress extends Fragment {
         // Required empty public constructor
     }
 
-    private DebuggingTextItemAdapter<WorkoutEntryModel> debuggingListAdapter;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_track_progress, container, false);
 
-        // ====== DEBUGGING ========================================================================
-        // The logic in this debugging block is just used for debugging another area of the app and
-        // can be abandoned once this screen has an actual implementation.
-        try {
-            User activeUser = ActiveSyncApplication.getActiveUser();
-            ArrayList<WorkoutEntryModel> workoutModels = WorkoutEntryModel.allFromDatabaseByUser(
-                ActiveSyncApplication.getDatabase(),
-                activeUser == null ? DefaultUsers.TestUser : activeUser
-            );
-            ListView debuggingList = view.findViewById(R.id.dbg_saved_workouts_list);
-            debuggingListAdapter = new DebuggingTextItemAdapter<>(getContext(), workoutModels);
-            debuggingList.setAdapter(debuggingListAdapter);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        Button nukeDbButton = view.findViewById(R.id.dbg_nuke_database_button);
-        nukeDbButton.setOnClickListener(v -> nukeDatabase());
-        // =========================================================================================
-
         return view;
     }
 
-    /**
-     * Deletes all records from the database.
-     */
-    private void nukeDatabase() {
-        ActiveSyncApplication.reinitializeDatabase();
-        debuggingListAdapter.clear();
-        debuggingListAdapter.notifyDataSetChanged();
-        Toast.makeText(
-            getContext(), "Database defaults restored.", Toast.LENGTH_LONG
-        ).show();
-    }
 }

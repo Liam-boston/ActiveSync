@@ -49,4 +49,6 @@
     <string name="email_hint">Email</string>
     <string name="login_view_title">Login</string>
     <string name="already_registered">Already registered?</string>
+    <string name="nuke_database">💣 Nuke Database 💣</string>
+    <string name="debugging_view_nsaved_workouts">[DEBUGGING VIEW]\nSAVED WORKOUTS</string>
 </resources>
