@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
+import java.util.Calendar;
 
 public class Homepage extends Fragment {
     // declare UI element references
@@ -25,6 +25,35 @@ public class Homepage extends Fragment {
 
     public Homepage() {
         // Required empty public constructor
+    }
+
+    private enum TimeOfDay {
+        Morning, Afternoon, Evening, Night
+    }
+
+    private TimeOfDay getTimeOfDay(int hourOfDay) {
+        if (hourOfDay >= 5 && hourOfDay < 12) return TimeOfDay.Morning;
+        if (hourOfDay >= 12 && hourOfDay < 18) return TimeOfDay.Afternoon;
+        if (hourOfDay >= 18 && hourOfDay < 20) return TimeOfDay.Evening;
+        return TimeOfDay.Night; // 10pm - 5am
+    }
+
+    private String generateGreetingText(String displayName) {
+        if (displayName == null || displayName.length() < 1) {
+            displayName = "friend";
+        }
+        switch (getTimeOfDay(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))) {
+            case Morning:
+                return "Rise and shine, " + displayName + "!";
+            case Afternoon:
+                return "Good afternoon, " + displayName + "!";
+            case Evening:
+                return "Good evening, " + displayName + ".";
+            case Night:
+                return "Quite the night owl, " + displayName + "!";
+            default:
+                return "Hi there, " + displayName + ".";
+        }
     }
 
     @Override
@@ -49,12 +78,7 @@ public class Homepage extends Fragment {
                 displayName = triggeringIntent.getStringExtra(LoginActivity.INTENT_EXTRA_EMAIL_ADDRESS);
             }
         }
-        String greetingText = "Good morning"; // TODO: Set this according to the time of day
-        if (displayName != null && displayName.length() > 0) {
-            greetingText += ", " + displayName;
-        }
-        greetingText += "!";
-        greetingTextView.setText(greetingText);
+        greetingTextView.setText(generateGreetingText(displayName));
 
         // Create a user for this display name in the database if there is not one already and set
         // the user as the active user.
@@ -81,8 +105,8 @@ public class Homepage extends Fragment {
         calendarViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar calendarFragment = new Calendar();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, calendarFragment).commit();
+                WorkoutCalendar workoutCalendarFragment = new WorkoutCalendar();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, workoutCalendarFragment).commit();
             }
         });
 

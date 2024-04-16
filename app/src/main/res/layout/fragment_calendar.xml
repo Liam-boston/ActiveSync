@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".Calendar">
+    tools:context=".WorkoutCalendar">
 
     <TextView
         android:id="@+id/calendar_greeting"

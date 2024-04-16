@@ -1,38 +1,18 @@
 package edu.psu.sweng888.activesync;
 
-import static edu.psu.sweng888.activesync.R.id.mapSearch;
-
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.List;
-
-import edu.psu.sweng888.activesync.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity  {
     // declare nav-bar and fragments
     private BottomNavigationView navBar;
     private Homepage homepageFragment;
-    private Calendar calendarFragment;
+    private WorkoutCalendar workoutCalendarFragment;
     private LogWorkout logWorkoutFragment;
     private RecoveryStatus recoveryStatusFragment;
     private TrackProgress trackProgressFragment;
@@ -63,7 +43,7 @@ public class MainActivity extends AppCompatActivity  {
         // Initialize nav-bar element references
         navBar = findViewById(R.id.nav_bar);
         homepageFragment = new Homepage();
-        calendarFragment = new Calendar();
+        workoutCalendarFragment = new WorkoutCalendar();
         logWorkoutFragment = new LogWorkout();
         recoveryStatusFragment = new RecoveryStatus();
         trackProgressFragment = new TrackProgress();
@@ -84,7 +64,7 @@ public class MainActivity extends AppCompatActivity  {
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, homepageFragment).commit();
                     return true;
                 } else if (id == R.id.calendar_item) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, calendarFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, workoutCalendarFragment).commit();
                     return true;
                 } else if (id == R.id.log_workout_item) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, logWorkoutFragment).commit();
