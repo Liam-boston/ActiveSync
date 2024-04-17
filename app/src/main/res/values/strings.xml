@@ -51,4 +51,10 @@
     <string name="already_registered">Already registered?</string>
     <string name="nuke_database">💣 Nuke Database 💣</string>
     <string name="debugging_view_nsaved_workouts">[DEBUGGING VIEW]\nSAVED WORKOUTS</string>
+    <string name="track_progress_subtitle">Select an exercise type to view progress over the selected interval of time.</string>
+    <string name="track_progress_title">Progress Tracker</string>
+    <string name="track_progress_exercise_type_label">Exercise Type</string>
+    <string name="end_date_picker_label">To</string>
+    <string name="start_date_picker_label">From</string>
+    <string name="date_picker_hint">Click to choose...</string>
 </resources>
