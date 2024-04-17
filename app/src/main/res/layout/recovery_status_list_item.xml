@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_alignParentEnd="true"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <ProgressBar
             android:id="@+id/recoveryBar"
