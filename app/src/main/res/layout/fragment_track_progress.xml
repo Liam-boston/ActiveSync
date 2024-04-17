@@ -90,7 +90,7 @@
                 android:layout_width="64dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/baseline_search_24"
+                android:src="@drawable/selector_search_button"
                 />
 
         </LinearLayout>
