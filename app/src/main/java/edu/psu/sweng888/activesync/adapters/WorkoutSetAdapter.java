@@ -160,10 +160,16 @@ public class WorkoutSetAdapter extends RecyclerView.Adapter<WorkoutSetAdapter.Vi
                 if (!positionInRange(index)) return;
                 WorkoutSet set = adapter.sets.get(index);
 
-                int latestReps = Integer.parseInt(editable.toString());
-                if (set.reps != latestReps) {
-                    set.reps = latestReps;
-                    invokeChangeHandler(index, set);
+                try {
+                    int latestReps = Integer.parseInt(editable.toString());
+                    if (set.reps != latestReps) {
+                        set.reps = latestReps;
+                        invokeChangeHandler(index, set);
+                    }
+                }
+                catch (NumberFormatException nfe) {
+                    // Swallow number format exceptions, which annoyingly happen when we delete
+                    // a field's value, resulting in an empty string
                 }
             }
         });

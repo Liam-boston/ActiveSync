@@ -22,6 +22,14 @@ public class Weight {
         this.amount = amount;
     }
 
+    public static Weight Pounds(double amount) {
+        return new Weight(WeightUnit.Pounds, amount);
+    }
+
+    public static Weight Kilograms(double amount) {
+        return new Weight(WeightUnit.Kilograms, amount);
+    }
+
     /**
      * Returns a human-readable string representation of this instance.
      */

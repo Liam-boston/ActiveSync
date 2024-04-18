@@ -13,16 +13,28 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseType;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseTypeWithMuscleGroups;
+import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
+import edu.psu.sweng888.activesync.dataAccessLayer.models.WeightUnit;
+import edu.psu.sweng888.activesync.dataAccessLayer.models.Workout;
+import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutSet;
 import edu.psu.sweng888.activesync.databinding.FragmentTrackProgressBinding;
 import edu.psu.sweng888.activesync.dialogs.DatePickerDialogFragment;
 
@@ -53,6 +65,16 @@ public class TrackProgress extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentTrackProgressBinding.inflate(inflater, container, false);
         fragmentManager = requireActivity().getSupportFragmentManager();
+
+        // Set chart's X-Axis formatter to display human-readable dates
+        binding.progressTrackerLineChart.getXAxis().setValueFormatter(
+            new UnixTimestampAsHumanReadableDateAxisFormatter()
+        );
+        binding.progressTrackerLineChart.getXAxis().setLabelRotationAngle(-45f);
+        //*
+        final float MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+        binding.progressTrackerLineChart.getXAxis().setGranularity(MILLISECONDS_PER_DAY);
+        //*/
 
         // Set up click event handlers
         binding.trackProgressResetButton.setOnClickListener(this::onResetButtonClick);
@@ -114,13 +136,6 @@ public class TrackProgress extends Fragment {
             setEnabledWithOpacity(this.binding.trackProgressSearchButton, true);
             setEnabledWithOpacity(this.binding.trackProgressResetButton, true);
         }
-
-        // Disable search button if we haven't selected any dates.
-        boolean atLeastOneDateSet = this.searchStartDate != null || this.searchEndDate != null;
-        setEnabledWithOpacity(
-            this.binding.trackProgressSearchButton,
-            this.selectedExerciseType != null && atLeastOneDateSet
-        );
     }
 
     private void onStartDateInputClick(View __) {
@@ -149,28 +164,79 @@ public class TrackProgress extends Fragment {
         stateHasChanged();
     }
 
-    private void DEBUGGING_setupDummyChartData() {
-        // TODO: DEBUGGING! Add data into the line chart to test the library's functionality.
-        // See this documentation page for quick-start tips:
-        //   https://weeklycoding.com/mpandroidchart-documentation/getting-started/
-        List<Entry> plotItems = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
-            plotItems.add(new Entry(i, i)); // y = x
-        }
-        LineDataSet dataSet = new LineDataSet(plotItems, "y = x");
-        dataSet.setColor(Color.BLACK);
-        LineData lineData = new LineData(dataSet);
-        binding.progressTrackerLineChart.setData(lineData);
-        binding.progressTrackerLineChart.invalidate();
-    }
-
     /**
      * Button click handler for "search" button that performs a search for the requested data and
      * populates the graph with it.
      * @param __ The view that triggered this event. This parameter is unused.
      */
     private void onSearchButtonClick(View __) {
-        this.DEBUGGING_setupDummyChartData(); // TODO: Replace w/ real impl.!
+        // Search the data set for workouts owned by the current user that have an exercise type
+        // matching the one selected in the form. Filter this data down to only those sessions that
+        // occurred between the given start and stop times. If either time constraint is unset, use
+        // the minimum/maximum value instead.
+        // TODO: As a shortcut, we retrieve all data from the database then filter it in code.
+        //       This is bad practice, and should be replaced with a more precise SQL query.
+        //User activeUser = ActiveSyncApplication.getActiveUser();
+        //User targetUser = activeUser == null ? DefaultUsers.TestUser : activeUser;
+        User targetUser = DefaultUsers.TestUser; // TODO: DEBUGGING! Replace this line with the two above.
+        long minTime = (searchStartDate == null ? new Date(Long.MIN_VALUE) : searchStartDate).getTime();
+        long maxTime = (searchEndDate == null ? new Date(Long.MAX_VALUE) : searchEndDate).getTime();
+        List<Workout> targetWorkouts = ActiveSyncApplication.getDatabase()
+            .workoutDao()
+            .getWorkoutsForUser(targetUser.userId)
+            .stream()
+            .filter(workout -> workout.exerciseTypeId == selectedExerciseType.exerciseType.exerciseTypeId)
+            .filter(workout -> workout.date.getTime() >= minTime && workout.date.getTime() <= maxTime)
+            .sorted(Comparator.comparing(workout -> workout.date))
+            .collect(Collectors.toList());
+
+        // If there aren't any matching results, we want to stop here. Make sure we clear data so
+        // the user does not interpret past results as the results for this query.
+        binding.progressTrackerLineChart.clear();
+        binding.progressTrackerLineChart.invalidate();
+        if (targetWorkouts.size() < 1) return;
+
+
+        // For each matched workout, compute the maximum weight lifted across all sets. This is the
+        // value we'd like to plot.  Assume all plots are in pounds (lbs).  If we encounter a set
+        // that is measured in kilograms, convert it to pounds.
+        final double LBS_PER_KG = 2.204623;
+        Map<Long, Double> maxWeightByDayAsUnixTimestamp = new HashMap<>();
+        for (Workout workout : targetWorkouts) {
+            double maxWeightLbs = ActiveSyncApplication.getDatabase()
+                .workoutSetDao()
+                .getSetsForWorkout(workout.workoutId)
+                .stream()
+                .map(set -> set.weight.unit == WeightUnit.Pounds ? set.weight.amount : set.weight.amount * LBS_PER_KG)
+                .max(Comparator.naturalOrder())
+                .orElse(0.0); // TODO: Provide a different default value?
+            // Add or update the entry for this day in the map
+            long dateAsUnixTimestamp = workout.date.getTime();
+            double existingMax = maxWeightByDayAsUnixTimestamp.getOrDefault(dateAsUnixTimestamp, Double.MIN_VALUE);
+            maxWeightByDayAsUnixTimestamp.put(dateAsUnixTimestamp, Math.max(existingMax, maxWeightLbs));
+        }
+
+        // Create a dataset from the map
+        List<Entry> weightByDayData = maxWeightByDayAsUnixTimestamp
+            .keySet()
+            .stream()
+            .map(timestamp -> new Entry(timestamp, maxWeightByDayAsUnixTimestamp.get(timestamp).floatValue()))
+            .sorted(Comparator.comparing(Entry::getX))
+            .collect(Collectors.toList());
+
+        // Add the data to the chart and invalidate it to force a re-render
+        LineDataSet dataSet = new LineDataSet(weightByDayData, "Highest Weight by Day (LBS)");
+        dataSet.setColor(Color.BLUE);
+        LineData lineData = new LineData(dataSet);
+        binding.progressTrackerLineChart.setData(lineData);
+        binding.progressTrackerLineChart.invalidate();
+    }
+
+    private class UnixTimestampAsHumanReadableDateAxisFormatter extends ValueFormatter {
+        @Override
+        public java.lang.String getAxisLabel(float value, AxisBase axis) {
+            return ActiveSyncApplication.YearMonthDayDateFormat.format(new Date((long)value));
+        }
     }
 
     /**

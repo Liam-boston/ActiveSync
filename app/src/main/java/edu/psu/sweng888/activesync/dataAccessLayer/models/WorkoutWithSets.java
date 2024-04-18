@@ -3,6 +3,8 @@ package edu.psu.sweng888.activesync.dataAccessLayer.models;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,4 +19,11 @@ public class WorkoutWithSets {
         entityColumn = "workout_id"
     )
     public List<WorkoutSet> sets;
+
+    public WorkoutWithSets() { }
+
+    public WorkoutWithSets(Workout workout, WorkoutSet... sets) {
+        this.workout = workout;
+        this.sets = Arrays.asList(sets);
+    }
 }
