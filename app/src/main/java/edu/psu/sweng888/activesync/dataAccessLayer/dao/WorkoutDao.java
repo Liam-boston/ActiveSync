@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Upsert;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
@@ -59,7 +60,14 @@ public abstract class WorkoutDao extends AbstractUpsertingDao<Workout> {
 
     @Query("SELECT workout_id FROM workout WHERE user_id = :userId")
     public abstract long[] getWorkoutIdsForUser(long userId);
+        //'2016-10-09'
 
+    /*
+        - tried writing query to return workouts within past three days, but everytime
+         I compare and format the date from the record it comes back null
+    */
+    @Query("SELECT * FROM workout WHERE DATE(date) >= DATE('now','-3 days') and :userId = user_id")
+    public abstract List<Workout> getWorkoutsFromRange(long userId);
     @Query("DELETE FROM workout")
     public abstract void wipe();
 }
