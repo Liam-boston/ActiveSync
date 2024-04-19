@@ -174,11 +174,8 @@ public class TrackProgress extends Fragment {
         // matching the one selected in the form. Filter this data down to only those sessions that
         // occurred between the given start and stop times. If either time constraint is unset, use
         // the minimum/maximum value instead.
-        // TODO: As a shortcut, we retrieve all data from the database then filter it in code.
-        //       This is bad practice, and should be replaced with a more precise SQL query.
-        //User activeUser = ActiveSyncApplication.getActiveUser();
-        //User targetUser = activeUser == null ? DefaultUsers.TestUser : activeUser;
-        User targetUser = DefaultUsers.TestUser; // TODO: DEBUGGING! Replace this line with the two above.
+        User activeUser = ActiveSyncApplication.getActiveUser();
+        User targetUser = activeUser == null ? DefaultUsers.TestUser : activeUser;
         long minTime = (searchStartDate == null ? new Date(Long.MIN_VALUE) : searchStartDate).getTime();
         long maxTime = (searchEndDate == null ? new Date(Long.MAX_VALUE) : searchEndDate).getTime();
         List<Workout> targetWorkouts = ActiveSyncApplication.getDatabase()
@@ -195,7 +192,6 @@ public class TrackProgress extends Fragment {
         binding.progressTrackerLineChart.clear();
         binding.progressTrackerLineChart.invalidate();
         if (targetWorkouts.size() < 1) return;
-
 
         // For each matched workout, compute the maximum weight lifted across all sets. This is the
         // value we'd like to plot.  Assume all plots are in pounds (lbs).  If we encounter a set

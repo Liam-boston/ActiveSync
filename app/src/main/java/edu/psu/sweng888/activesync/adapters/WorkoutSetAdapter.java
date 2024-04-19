@@ -91,6 +91,11 @@ public class WorkoutSetAdapter extends RecyclerView.Adapter<WorkoutSetAdapter.Vi
         }
     }
 
+    public void reset() {
+        this.sets.clear();
+        this.notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView setIndexLabel;
         private final EditText numRepsInput;
