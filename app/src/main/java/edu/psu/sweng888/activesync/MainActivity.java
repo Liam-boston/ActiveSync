@@ -2,6 +2,8 @@ package edu.psu.sweng888.activesync;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -101,6 +103,29 @@ public class MainActivity extends AppCompatActivity  {
             data.putSerializable(Constants.EXTRAS_KEY_WORKOUT_TO_EDIT, viewModel);
             swapToFragment(new LogWorkout(), data);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.options_menu_item_logout) {
+            logout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        ActiveSyncApplication.setActiveUser(null);
+        Intent backToLogin = new Intent(this, LoginActivity.class);
+        startActivity(backToLogin);
+        finish();
     }
 
 }
