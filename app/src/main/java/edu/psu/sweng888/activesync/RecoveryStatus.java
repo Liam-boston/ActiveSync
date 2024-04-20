@@ -30,14 +30,12 @@ public class RecoveryStatus extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recovery_status, container, false);
 
-        // This is a temporary setup just to finish the UI, will need to actually
-        // use the MuscleGroupDao to pull values from the db
-        // TODO: Pull MuscleGroup values from the db
-        List<MuscleGroup> muscleGroups = new ArrayList<>(Arrays.asList(DefaultMuscleGroups.getAllDefaultMuscleGroups()));
-
         // Configure the ListView
         listView = view.findViewById(R.id.recovery_status_list);
-        adapter = new RecoveryStatusAdapter(getContext(), muscleGroups);
+        adapter = new RecoveryStatusAdapter(
+            getContext(),
+            ActiveSyncApplication.getDatabase().muscleGroupDao().getAll()
+        );
         listView.setAdapter(adapter);
 
         return view;
