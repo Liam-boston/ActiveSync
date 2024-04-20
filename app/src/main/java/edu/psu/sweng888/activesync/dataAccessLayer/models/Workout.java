@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  * of one or more sets (WorkoutSet) of a particular exercise (ExerciseType).
  */
 @Entity
-public class Workout {
+public class Workout implements Serializable {
 
     /**
      * The unique identifier for this workout.

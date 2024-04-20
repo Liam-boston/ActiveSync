@@ -57,4 +57,5 @@
     <string name="end_date_picker_label">To</string>
     <string name="start_date_picker_label">From</string>
     <string name="date_picker_hint">Click to choose...</string>
+    <string name="log_out">Log Out</string>
 </resources>
