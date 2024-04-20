@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -49,9 +50,6 @@ public class LogWorkout extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_log_workout, container, false);
-
-        // TODO: For editing an existing entry, get the primary key (workout ID) of the entry to
-        //       edit from intent data that started this activity.
 
         // Get the list of available exercise types from the database. These will be used to
         // populate the dropdown with choices.
@@ -173,6 +171,9 @@ public class LogWorkout extends Fragment {
         if (args != null) {
             incomingModel = (WorkoutEntryModel) args.getSerializable(Constants.EXTRAS_KEY_WORKOUT_TO_EDIT);
             this.setArguments(null); // Clear out the incoming arguments, as this "edit" is intended to persist only over a single redirect
+            // If we have an incoming model, we should also set the text to "Edit Workout" instead
+            // of "New Workout"
+            ((TextView) view.findViewById(R.id.log_workout_title)).setText("Edit Workout");
         }
         resetModelState(incomingModel);
 
