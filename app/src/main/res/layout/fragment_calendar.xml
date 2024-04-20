@@ -1,19 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context=".WorkoutCalendar">
 
     <TextView
         android:id="@+id/calendar_greeting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/calendar_greeting"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Workout Calendar"
+        android:layout_marginTop="24dp"
         android:textAlignment="center"
-        android:textSize="40sp" />
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/calendar_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_below="@id/calendar_greeting"
+        android:text="Review your workout timeline."
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:textStyle="italic" />
+
+    <ListView
+        android:id="@+id/calendar_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calendar_instructions"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="-12dp"
+        android:layout_marginEnd="5dp"
+        android:dividerHeight="10sp" />
+
+</RelativeLayout>
