@@ -18,7 +18,10 @@
             android:layout_height="wrap_content"
             android:text="@string/homepage_greeting"
             android:textAlignment="center"
-            android:textSize="40sp" />
+            android:textSize="24sp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            />
     </LinearLayout>
 
     <LinearLayout

@@ -4,11 +4,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * Represents a particular type of exercise that can be done in a workout, e.g. "pull-ups".
  */
 @Entity
-public class ExerciseType {
+public class ExerciseType implements Serializable {
 
     /**
      * The unique identifier of this exercise type.

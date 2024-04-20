@@ -64,18 +64,19 @@
                 android:text="Sign Up"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:cornerRadius="20dp" />
+                app:cornerRadius="20dp"
+                />
 
-            <TextView
-                android:id="@+id/loginRedirectText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:padding="8dp"
-                android:text="Already a user. Login"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+            <Button
+                android:id="@+id/login_redirect_button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/already_registered"
+                android:textSize="14sp"
+                android:textAllCaps="false"
+                app:cornerRadius = "20dp"
+                style="?attr/borderlessButtonStyle"
+                />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

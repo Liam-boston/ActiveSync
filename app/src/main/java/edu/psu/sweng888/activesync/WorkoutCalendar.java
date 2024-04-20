@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Calendar extends Fragment {
-    public Calendar() {
+public class WorkoutCalendar extends Fragment {
+    public WorkoutCalendar() {
         // Required empty public constructor
     }
     @Override

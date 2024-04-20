@@ -3,12 +3,14 @@ package edu.psu.sweng888.activesync.dataAccessLayer.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Upsert;
 
 import java.util.List;
 
+import edu.psu.sweng888.activesync.dataAccessLayer.models.Workout;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutSet;
 
 /**
@@ -28,6 +30,13 @@ public abstract class WorkoutSetDao extends AbstractUpsertingDao<WorkoutSet> {
     @Update
     @Override
     public abstract int update(WorkoutSet workoutSet);
+
+    /**
+     * Ensures the record associated with the given workout set exists in the database. Use this
+     * method to seed the database with default and/or test data.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    public abstract long ensureInserted(WorkoutSet workoutSet);
 
     @Delete
     public abstract void delete(WorkoutSet workoutSet);

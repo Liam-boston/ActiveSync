@@ -19,7 +19,7 @@
         android:icon="@drawable/home_icon"
         android:title="@string/home_icon_text"/>
 
-    <!--    Calendar view action item    -->
+    <!--    WorkoutCalendar view action item    -->
     <item
         android:id="@+id/calendar_item"
         android:icon="@drawable/calendar_icon"

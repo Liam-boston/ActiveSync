@@ -4,11 +4,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * Represents a single muscle group that can be targetted by an exercise.
  */
 @Entity
-public class MuscleGroup {
+public class MuscleGroup implements Serializable {
 
     /**
      * The unique identifier for this muscle group.

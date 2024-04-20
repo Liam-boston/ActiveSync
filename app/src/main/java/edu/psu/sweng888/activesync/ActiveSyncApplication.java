@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultExerciseTypes;
 import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultUsers;
+import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultWorkouts;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
 
@@ -44,6 +45,7 @@ public class ActiveSyncApplication extends Application {
     public static void initializeDatabase() {
         DefaultUsers.initialize(database);
         DefaultExerciseTypes.initialize(database);
+        DefaultWorkouts.initialize(database);
     }
 
     public static void reinitializeDatabase() {

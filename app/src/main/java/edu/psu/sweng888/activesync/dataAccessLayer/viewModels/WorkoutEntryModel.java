@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteConstraintException;
 
 import androidx.room.Transaction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutSet;
  * view, which ultimately culminates in a workout entity (and associated entities) being saved
  * into the database.
  */
-public class WorkoutEntryModel {
+public class WorkoutEntryModel implements Serializable {
 
     /**
      * The currently logged-in user.

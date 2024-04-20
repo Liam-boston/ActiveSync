@@ -91,6 +91,12 @@ public class WorkoutSetAdapter extends RecyclerView.Adapter<WorkoutSetAdapter.Vi
         }
     }
 
+    public void reset(List<WorkoutSet> sets) {
+        this.sets.clear();
+        this.sets.addAll(sets);
+        this.notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView setIndexLabel;
         private final EditText numRepsInput;
@@ -160,10 +166,16 @@ public class WorkoutSetAdapter extends RecyclerView.Adapter<WorkoutSetAdapter.Vi
                 if (!positionInRange(index)) return;
                 WorkoutSet set = adapter.sets.get(index);
 
-                int latestReps = Integer.parseInt(editable.toString());
-                if (set.reps != latestReps) {
-                    set.reps = latestReps;
-                    invokeChangeHandler(index, set);
+                try {
+                    int latestReps = Integer.parseInt(editable.toString());
+                    if (set.reps != latestReps) {
+                        set.reps = latestReps;
+                        invokeChangeHandler(index, set);
+                    }
+                }
+                catch (NumberFormatException nfe) {
+                    // Swallow number format exceptions, which annoyingly happen when we delete
+                    // a field's value, resulting in an empty string
                 }
             }
         });
@@ -176,10 +188,16 @@ public class WorkoutSetAdapter extends RecyclerView.Adapter<WorkoutSetAdapter.Vi
                 if (!positionInRange(index)) return;
                 WorkoutSet set = adapter.sets.get(index);
 
-                double latestAmount = Double.parseDouble(editable.toString());
-                if (set.weight.amount != latestAmount) {
-                    set.weight.amount = latestAmount;
-                    invokeChangeHandler(index, set);
+                try {
+                    double latestAmount = Double.parseDouble(editable.toString());
+                    if (set.weight.amount != latestAmount) {
+                        set.weight.amount = latestAmount;
+                        invokeChangeHandler(index, set);
+                    }
+                }
+                catch (NumberFormatException nfe) {
+                    // Intentionally ignore -- this can happen when the user deletes all characters
+                    // from the input.
                 }
             }
         });

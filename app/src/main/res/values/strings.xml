@@ -43,4 +43,18 @@
 
     <!-- Google Maps API KEY -->
     <string name="map_api_key">AIzaSyD4mlT6JrAHteKMALv9yK7WeNjqWq3w2Hs</string>
+    <string name="not_registered_yet">Not registered yet?</string>
+    <string name="login_button_text">Login</string>
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email</string>
+    <string name="login_view_title">Login</string>
+    <string name="already_registered">Already registered?</string>
+    <string name="nuke_database">💣 Nuke Database 💣</string>
+    <string name="debugging_view_nsaved_workouts">[DEBUGGING VIEW]\nSAVED WORKOUTS</string>
+    <string name="track_progress_subtitle">Select an exercise type to view progress over the selected interval of time.</string>
+    <string name="track_progress_title">Progress Tracker</string>
+    <string name="track_progress_exercise_type_label">Exercise Type</string>
+    <string name="end_date_picker_label">To</string>
+    <string name="start_date_picker_label">From</string>
+    <string name="date_picker_hint">Click to choose...</string>
 </resources>

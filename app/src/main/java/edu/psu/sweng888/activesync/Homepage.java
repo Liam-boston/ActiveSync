@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
+import java.util.Calendar;
 
 public class Homepage extends Fragment {
     // declare UI element references
@@ -25,6 +25,35 @@ public class Homepage extends Fragment {
 
     public Homepage() {
         // Required empty public constructor
+    }
+
+    private enum TimeOfDay {
+        Morning, Afternoon, Evening, Night
+    }
+
+    private TimeOfDay getTimeOfDay(int hourOfDay) {
+        if (hourOfDay >= 5 && hourOfDay < 12) return TimeOfDay.Morning;
+        if (hourOfDay >= 12 && hourOfDay < 18) return TimeOfDay.Afternoon;
+        if (hourOfDay >= 18 && hourOfDay < 20) return TimeOfDay.Evening;
+        return TimeOfDay.Night; // 10pm - 5am
+    }
+
+    private String generateGreetingText(String displayName) {
+        if (displayName == null || displayName.length() < 1) {
+            displayName = "friend";
+        }
+        switch (getTimeOfDay(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))) {
+            case Morning:
+                return "Rise and shine, " + displayName + "!";
+            case Afternoon:
+                return "Good afternoon, " + displayName + "!";
+            case Evening:
+                return "Good evening, " + displayName + ".";
+            case Night:
+                return "Quite the night owl, " + displayName + "!";
+            default:
+                return "Hi there, " + displayName + ".";
+        }
     }
 
     @Override
@@ -49,12 +78,7 @@ public class Homepage extends Fragment {
                 displayName = triggeringIntent.getStringExtra(LoginActivity.INTENT_EXTRA_EMAIL_ADDRESS);
             }
         }
-        String greetingText = "Good morning"; // TODO: Set this according to the time of day
-        if (displayName != null && displayName.length() > 0) {
-            greetingText += ", " + displayName;
-        }
-        greetingText += "!";
-        greetingTextView.setText(greetingText);
+        greetingTextView.setText(generateGreetingText(displayName));
 
         // Create a user for this display name in the database if there is not one already and set
         // the user as the active user.
@@ -68,53 +92,37 @@ public class Homepage extends Fragment {
         //Max 5 items in navBar
         gymLocatorButton = view.findViewById(R.id.gym_locator_button);
 
+        // FIXME: DEBUGGING - when the user clicks on the greeting text on the homepage, they are
+        //        redirected to the "debugging" view fragment. This view fragment contains developer
+        //        information and actions (e.g., database nuke) and should be removed before
+        //        delivering the app.
+        greetingTextView.setOnClickListener(__ -> startNewFragment(new DebuggingFragment()));
+
         /** * onClick listener for logWorkoutButton */
-        logWorkoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogWorkout logWorkoutFragment = new LogWorkout();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, logWorkoutFragment).commit();
-            }
-        });
+        logWorkoutButton.setOnClickListener(__ -> startNewFragment(new LogWorkout()));
 
         /** * onClick listener for calendarViewButton */
-        calendarViewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendarFragment = new Calendar();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, calendarFragment).commit();
-            }
-        });
+        calendarViewButton.setOnClickListener(__ -> startNewFragment(new WorkoutCalendar()));
 
         /** * onClick listener for recoveryStatusButton */
-        recoveryStatusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecoveryStatus recoveryStatusFragment = new RecoveryStatus();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, recoveryStatusFragment).commit();
-            }
-        });
+        recoveryStatusButton.setOnClickListener(__ -> startNewFragment(new RecoveryStatus()));
 
         /** * onClick listener for trackProgressButton */
-        trackProgressButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TrackProgress trackProgressFragment = new TrackProgress();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, trackProgressFragment).commit();
-            }
-        });
+        trackProgressButton.setOnClickListener(__ -> startNewFragment(new TrackProgress()));
 
         /** * onClick listener for gymLocatorButton */
-        gymLocatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GymLocator gymLocatorFragment = new GymLocator();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_bar_container, gymLocatorFragment).commit();
-            }
-        });
+        gymLocatorButton.setOnClickListener(__ -> startNewFragment(new GymLocator()));
 
 
         return view;
+    }
+
+    private void startNewFragment(Fragment fragment) {
+        getActivity()
+            .getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.nav_bar_container, fragment)
+            .commit();
     }
 
     @Override
