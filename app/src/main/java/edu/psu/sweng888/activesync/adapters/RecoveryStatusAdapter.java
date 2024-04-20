@@ -11,12 +11,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import edu.psu.sweng888.activesync.ActiveSyncApplication;
@@ -64,7 +68,13 @@ public class RecoveryStatusAdapter extends ArrayAdapter<MuscleGroup> {
 
         // Calculate fatigue status
         assert muscleGroup != null;
-        MuscleGroupFatigueStatus muscleGroupFatigueStatus = calculateFatigueStatus(muscleGroup);
+        MuscleGroupFatigueStatus muscleGroupFatigueStatus;
+        try {
+            muscleGroupFatigueStatus = calculateFatigueStatus(muscleGroup);
+        }
+        catch (ParseException pe) {
+            throw new RuntimeException(pe);
+        }
 
         // display recoveryStatus
         String percentRecovered = muscleGroup.getName() + " \t-\t " + (100 - muscleGroupFatigueStatus.getApproximateIntegerFatigue()) + "% recovered";
@@ -90,25 +100,6 @@ public class RecoveryStatusAdapter extends ArrayAdapter<MuscleGroup> {
         adjustProgressBarColors(100 - muscleGroupFatigueStatus.getApproximateIntegerFatigue());
 
         return view;
-    }
-
-    /**
-     * Returns a date that is the given number of days before today's date.
-     */
-    private Date getDaysAgoDate(int daysAgo) {
-        final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
-        return new Date(System.currentTimeMillis() - (MILLISECONDS_PER_DAY * daysAgo));
-    }
-
-    /**
-     * Returns a date that represents tomorrow.
-     */
-    private Date tomorrow() {
-        return getDaysAgoDate(-1);
-    }
-
-    private boolean dateIsInRange(Date dateToConsider, Date oldestDate, Date newestDate) {
-        return dateToConsider.after(oldestDate) && dateToConsider.before(newestDate);
     }
 
     private Date withoutTime(Date date) {
@@ -157,6 +148,10 @@ public class RecoveryStatusAdapter extends ArrayAdapter<MuscleGroup> {
             this.daysUntilFullRecovery = daysUntilFullRecovery;
         }
 
+        public static MuscleGroupFatigueStatus fullyRecovered(MuscleGroup muscleGroup) {
+            return new MuscleGroupFatigueStatus(muscleGroup, 0.0, 0);
+        }
+
         public int getApproximateIntegerFatigue() {
             return (int) Math.round(100.0 * this.fatiguePercentage);
         }
@@ -165,54 +160,85 @@ public class RecoveryStatusAdapter extends ArrayAdapter<MuscleGroup> {
     /**
      * Returns statistics surrounding the fatigue level of the given muscle group with respect to
      * the workouts targeting this muscle group logged by the current user.
-     *
-     * The fatigue of a muscle group is defined as:
-     *   fatigue = numDaysWorked * recoveryRate * E
-     *
-     * Where "numDaysWorked" is the number of days that have a workout logged that targets the
-     * muscle group in question, "recoveryRate" is the rate at which the muscle group recovers
-     * per day unworked, and "E" is the "exhaustion coefficient", which is the rate at which a
-     * muscle group becomes fatigued per day worked.
-     *
-     * The exhaustion coefficient is currently hard-coded to 3.0 and is a factor of the muscle
-     * group's recovery rate. Ideally, this would be replaced by a "fatigueRate" property defined
-     * on each muscle group. The "exhaustion coefficient" concept is only used to get real-ish
-     * looking numbers while testing.
-     *
-     * The number of days until full recovery is simply defined as:
-     *   daysUntilRecovered = fatigue / recoveryRate
      */
-    private MuscleGroupFatigueStatus calculateFatigueStatus(MuscleGroup muscleGroup) {
-        // Get all workouts for this user that are associated with the given muscle group and took
-        // place within the amount of time it would take for the muscle group to fully recover.
-        int maxDaysUntilFullyRecovered = (int) Math.ceil(1 / muscleGroup.recoveryRate);
-        long numDaysWorkedOnMuscleGroupWithinRecoveryTimeline = userWorkouts
+    private MuscleGroupFatigueStatus calculateFatigueStatus(MuscleGroup muscleGroup) throws ParseException {
+        // Determine the current fatigue rate by looking through all the workouts the user has logged
+        // for the given muscle group and counting each day worked as "fatigue" and each day not worked
+        // as "rest". Sum the fatigue and rest coefficients across this time range up to the current
+        // day to get the total fatigue.
+        // TODO: This has the unfortunately requirement of reading **all the data**, but since this
+        //       is a "toy" app, this is okay for now. Future work would be finding a way to more
+        //       efficiently calculate this time series data.
+        Set<String> daysTargetingMuscleGroup = userWorkouts
             .stream()
             .filter(model -> workoutTargetsMuscleGroup(model, muscleGroup))
-            .map(model -> withoutTime(model.workout.date))
-            .filter(date ->
-                dateIsInRange(
-                    date,
-                    withoutTime(getDaysAgoDate(maxDaysUntilFullyRecovered)),
-                    withoutTime(tomorrow())
-                )
-            )
-            .map(ActiveSyncApplication.YearMonthDayDateFormat::format) // Make the objects more easiliy "distinct"-able. This is hacky, but oh well.
+            .map(model -> ActiveSyncApplication.YearMonthDayDateFormat.format(model.workout.date)) // We use a formatted string because it is easier to "distinct()".
             .distinct()
-            .count();
+            .collect(Collectors.toSet());
 
-        // The muscle group is assumed "rested" if no workouts have occurred in the time period it
-        // takes to fully recover. Start the fatigue percentage at zero, then "penalize" it by a
-        // factor of the recovery rate for the given muscle group for each day we have an exercise.
-        // TODO: We're making the (very hand-wave-y) assumption that each muscle group is exhausted by three times the recovery rate for each day it is used. This should probably be replaced with a "fatigue rate" property on each muscle group.
-        final double EXHAUSTION_FACTOR = 3.0;
-        double fatigue = muscleGroup.recoveryRate * EXHAUSTION_FACTOR * numDaysWorkedOnMuscleGroupWithinRecoveryTimeline;
+        // If we've never worked this muscle group, we can exit now with full recovery status
+        if (daysTargetingMuscleGroup.size() < 1) {
+            return MuscleGroupFatigueStatus.fullyRecovered(muscleGroup);
+        }
 
-        // Calculate the number of days until the muscle group will be fully recovered.
-        int daysUntilFullyRecovered = (int) Math.round(fatigue / muscleGroup.recoveryRate);
+        // Get the oldest date that we worked the muscle group. We then count the days between today
+        // and the oldest date (inclusive) for days worked and days rested. The former build up
+        // fatigue and the latter reduce it.
+        Date earliestDateWorked;
+        try {
+            earliestDateWorked = withoutTime(ActiveSyncApplication.YearMonthDayDateFormat.parse(
+                daysTargetingMuscleGroup
+                    .stream()
+                    .min(Comparator.naturalOrder())
+                    .get())
+            );
+        }
+        catch (ParseException pe) {
+            throw new RuntimeException(pe);
+        }
 
-        // Return the calculated statistics wrapped up in an envelope type
-        return new MuscleGroupFatigueStatus(muscleGroup, fatigue, daysUntilFullyRecovered);
+        // Loop from the earliest date to today's date, counting the worked VS rested days to come
+        // up with a fatigue level.
+        double fatiguePercentage = 0.0;
+        Date today = withoutTime(new Date());
+        Date dateBeingConsidered = earliestDateWorked;
+        final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+        while (!dateBeingConsidered.after(today))
+        {
+            String dateBeingConsideredAsString = ActiveSyncApplication.YearMonthDayDateFormat.format(dateBeingConsidered);
+            if (daysTargetingMuscleGroup.contains(dateBeingConsideredAsString)) {
+                // The user worked this muscle group on this day. Add fatigue equal to the muscle
+                // group's fatigue rate.
+                double FATIGUE_RATE = muscleGroup.recoveryRate * 2; // TODO: Define a fatigue rate per muscle group!
+                fatiguePercentage = fatiguePercentage + FATIGUE_RATE;
+            }
+            else {
+                // The user rested this muscle group on this day. Remove fatigue equal to the muscle
+                // group's recovery rate.
+                fatiguePercentage = fatiguePercentage - muscleGroup.recoveryRate;
+            }
+            // Clamp the fatigue percentage to the range [0, 1].
+            fatiguePercentage = clamp(fatiguePercentage, 0, 1);
+            /**
+             * The number of milliseconds in a single day (24 hours).
+             */
+            dateBeingConsidered = withoutTime(new Date(dateBeingConsidered.getTime() + MILLISECONDS_PER_DAY));
+        }
+
+        // Calculate the days of pure rest until a full recovery.
+        int approximateDaysUntilFullRecovery = (int) Math.round(fatiguePercentage / muscleGroup.recoveryRate);
+
+        return new MuscleGroupFatigueStatus(muscleGroup, fatiguePercentage, approximateDaysUntilFullRecovery);
+
+    }
+
+    private static double clamp(double value, double minInclusive, double maxInclusive) {
+        return Math.max(minInclusive, Math.min(maxInclusive, value));
+    }
+
+    private static boolean dateIsAfterOther(Date toConsider, Date referencePoint) {
+        return ActiveSyncApplication.YearMonthDayDateFormat.format(toConsider)
+            .compareTo(ActiveSyncApplication.YearMonthDayDateFormat.format(referencePoint)) > 0;
     }
 
     /**
