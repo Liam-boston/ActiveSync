@@ -267,6 +267,10 @@ public class LogWorkout extends Fragment {
 
         // Attempt to persist the model to the database. On success, show a toast alerting the user
         // that their data has been saved.
+        ExerciseTypeWithMuscleGroups selectedExercise = (ExerciseTypeWithMuscleGroups) exerciseTypeDropdown.getSelectedItem();
+        if (selectedExercise != null) {
+            viewModel.exerciseType = selectedExercise;
+        }
         WorkoutEntryModel persisted = viewModel.persistToDatabase(ActiveSyncApplication.getDatabase());
         showLongToast("Workout saved, way to go! 🎉");
     }
