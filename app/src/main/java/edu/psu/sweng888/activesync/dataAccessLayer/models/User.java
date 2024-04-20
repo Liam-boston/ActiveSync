@@ -5,11 +5,13 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * Represents a user of the application.
  */
 @Entity
-public class User {
+public class User implements Serializable {
 
     /**
      * The unique identifier for this user.

@@ -1,5 +1,7 @@
 package edu.psu.sweng888.activesync;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import edu.psu.sweng888.activesync.adapters.DebuggingTextItemAdapter;
@@ -37,7 +40,11 @@ public class DebuggingFragment extends Fragment {
                 activeUser == null ? DefaultUsers.TestUser : activeUser
             );
             ListView debuggingList = view.findViewById(R.id.dbg_saved_workouts_list);
-            debuggingListAdapter = new DebuggingTextItemAdapter<>(getContext(), workoutModels);
+            debuggingListAdapter = new DebuggingTextItemAdapter<>(
+                getContext(),
+                workoutModels,
+                this::handleDebugItemClick
+            );
             debuggingList.setAdapter(debuggingListAdapter);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -47,6 +54,14 @@ public class DebuggingFragment extends Fragment {
         nukeDbButton.setOnClickListener(v -> nukeDatabase());
 
         return view;
+    }
+
+    private void handleDebugItemClick(WorkoutEntryModel workout) {
+        // Redirect to the "log workout" view to edit the clicked item
+        Intent editWorkout = new Intent(this.getActivity(), MainActivity.class);
+        editWorkout.putExtra(Constants.EXTRAS_KEY_WORKOUT_TO_EDIT, workout);
+        editWorkout.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // This flag is necessary to reuse the existing MainActivity as opposed starting a new one
+        startActivity(editWorkout);
     }
 
     /**

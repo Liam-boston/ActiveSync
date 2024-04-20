@@ -6,11 +6,13 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * Represents a single set in a workout.
  */
 @Entity
-public class WorkoutSet {
+public class WorkoutSet implements Serializable {
 
     /**
      * The unique identifier of this workout set.

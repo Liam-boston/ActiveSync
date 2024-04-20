@@ -75,9 +75,6 @@ public class LogWorkout extends Fragment {
         exerciseTypeDropdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         exerciseTypeDropdown.setAdapter(exerciseTypeDropdownAdapter);
 
-        // Reset the view model
-        resetModelState();
-
         // Set up RecyclerView with references to workout set items
         workoutSetAdapter = new WorkoutSetAdapter(
             viewModel.workout.workoutId,
@@ -164,10 +161,20 @@ public class LogWorkout extends Fragment {
         // the "submit" button is clicked.
         submitButton.setOnClickListener(this::onSubmitClick);
 
-        // Register an event listener that will reset the model state when the user clicks "discard"
-        view.findViewById(R.id.log_workout_discard_button).setOnClickListener(
+        // Register an event listener that will reset the model state when the user clicks "new"
+        view.findViewById(R.id.log_workout_new_button).setOnClickListener(
             v -> resetModelState()
         );
+
+        // Finally, reset the view model. Use the incoming view model in the bundle data if it
+        // exists (otherwise, a new blank model will be created).
+        Bundle args = this.getArguments();
+        WorkoutEntryModel incomingModel = null;
+        if (args != null) {
+            incomingModel = (WorkoutEntryModel) args.getSerializable(Constants.EXTRAS_KEY_WORKOUT_TO_EDIT);
+            this.setArguments(null); // Clear out the incoming arguments, as this "edit" is intended to persist only over a single redirect
+        }
+        resetModelState(incomingModel);
 
         return view;
     }
@@ -178,9 +185,7 @@ public class LogWorkout extends Fragment {
      */
     private void onSubmitClick(View __) {
         try {
-            if (persistModelState()) {
-                resetModelState();
-            }
+            persistModelState();
         }
         catch (Exception e) {
             showLongToast("❌ Failed to persist workout.");
@@ -242,53 +247,67 @@ public class LogWorkout extends Fragment {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private boolean persistModelState() {
+    private void persistModelState() {
         // Guard against conditions that make the model invalid
-        if (viewModel == null) return false;
+        if (viewModel == null) return;
 
         // Show validation messages for invalid fields
         if (viewModel.workout.date == null) {
             showLongToast("⚠ Please set a date before saving.");
-            return false;
+            return;
         }
         if (viewModel.sets.size() < 1) {
             showLongToast("⚠ Please create at least one set before saving.");
-            return false;
+            return;
         }
         if (viewModel.currentUser == null) {
             showLongToast("⚠ You must be logged in to save workouts!");
-            return false;
+            return;
         }
 
         // Attempt to persist the model to the database. On success, show a toast alerting the user
         // that their data has been saved.
         WorkoutEntryModel persisted = viewModel.persistToDatabase(ActiveSyncApplication.getDatabase());
         showLongToast("Workout saved, way to go! 🎉");
-        return true;
     }
 
 
-    private void resetModelState() {
-        viewModel = new WorkoutEntryModel();
-        viewModel.currentUser = ActiveSyncApplication.getActiveUser();
-        if (viewModel.currentUser == null) {
-            // Redirect to login view
-            Intent redirectToLogin = new Intent(getContext(), LoginActivity.class);
-            startActivity(redirectToLogin);
-            Activity currentActivity = this.getActivity();
-            if (currentActivity != null) currentActivity.finish();
+    public void resetModelState(WorkoutEntryModel incomingModel) {
+        // Initialize the view model reference with fresh data if there is no incoming model.
+        // Otherwise, simply use the incoming model as the new view model.
+        if (incomingModel == null) {
+            viewModel = new WorkoutEntryModel();
+            viewModel.currentUser = ActiveSyncApplication.getActiveUser();
+            // Redirect to login view if no one is logged in
+            if (viewModel.currentUser == null) {
+                Intent redirectToLogin = new Intent(getContext(), LoginActivity.class);
+                startActivity(redirectToLogin);
+                Activity currentActivity = this.getActivity();
+                if (currentActivity != null) currentActivity.finish();
+                return;
+            }
         }
+        else {
+            viewModel = incomingModel;
+        }
+
+        // Populate the set view with the model's contents
         if (workoutSetAdapter != null) {
-            workoutSetAdapter.reset();
-            workoutSetAdapter.addBlankSet(viewModel.workout.workoutId);
+            workoutSetAdapter.reset(viewModel.sets);
+            if (viewModel.sets.size() < 1) {
+                workoutSetAdapter.addBlankSet(viewModel.workout.workoutId);
+            }
         }
         if (workoutSetView != null) {
             workoutSetView.scrollToPosition(0);
         }
+
         // Set up any fields of the form with values that may already exist in the view model
         updateDateInputText(workoutDateInput);
         updateDurationInputText(workoutDurationInput);
         updateExerciseDropdownWithModelState(exerciseTypeDropdown);
     }
+
+    public void resetModelState() { this.resetModelState(null); }
 
 }

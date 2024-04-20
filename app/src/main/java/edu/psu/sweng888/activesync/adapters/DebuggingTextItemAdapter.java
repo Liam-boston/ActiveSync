@@ -13,11 +13,15 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 import edu.psu.sweng888.activesync.R;
+import edu.psu.sweng888.activesync.eventListeners.DebuggingItemClickListener;
 
 public class DebuggingTextItemAdapter<TItem> extends ArrayAdapter<TItem> {
 
-    public DebuggingTextItemAdapter(Context context, ArrayList<TItem> items) {
+    private DebuggingItemClickListener<TItem> onClickHandler = null;
+
+    public DebuggingTextItemAdapter(Context context, ArrayList<TItem> items, DebuggingItemClickListener<TItem> onClick) {
         super(context, 0, items);
+        if (onClick != null) this.onClickHandler = onClick;
     }
 
     @NonNull
@@ -41,6 +45,11 @@ public class DebuggingTextItemAdapter<TItem> extends ArrayAdapter<TItem> {
         }
 
         ((TextView) convertView.findViewById(R.id.dbg_text_list_item_text)).setText(displayText);
+
+        // Add a click handler that dispatches a call to the registered handler if one exists
+        if (this.onClickHandler != null) {
+            convertView.setOnClickListener(__ -> this.onClickHandler.handleDebuggingItemClick(item));
+        }
 
         return convertView;
     }

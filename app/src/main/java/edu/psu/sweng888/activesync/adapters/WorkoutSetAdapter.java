@@ -91,8 +91,9 @@ public class WorkoutSetAdapter extends RecyclerView.Adapter<WorkoutSetAdapter.Vi
         }
     }
 
-    public void reset() {
+    public void reset(List<WorkoutSet> sets) {
         this.sets.clear();
+        this.sets.addAll(sets);
         this.notifyDataSetChanged();
     }
 

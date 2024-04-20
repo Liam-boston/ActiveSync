@@ -171,12 +171,12 @@
                 android:text="✅ Submit" />
 
             <Button
-                android:id="@+id/log_workout_discard_button"
+                android:id="@+id/log_workout_new_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:text="❌ Discard" />
+                android:text="➕ New" />
         </LinearLayout>
 
     </LinearLayout>

@@ -1,9 +1,11 @@
 package edu.psu.sweng888.activesync.dataAccessLayer.models;
 
+import java.io.Serializable;
+
 /**
  * Represents a measurement of weight in a particular unit.
  */
-public class Weight {
+public class Weight implements Serializable {
 
     /**
      * The amount of weight that this instance represents.

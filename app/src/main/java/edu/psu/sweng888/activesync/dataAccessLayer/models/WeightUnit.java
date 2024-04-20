@@ -1,9 +1,11 @@
 package edu.psu.sweng888.activesync.dataAccessLayer.models;
 
+import java.io.Serializable;
+
 /**
  * Represents a unit for measuring weight.
  */
-public enum WeightUnit {
+public enum WeightUnit implements Serializable {
     /**
      * Weights that use this unit are measured in imperial pounds (lbs).
      */
