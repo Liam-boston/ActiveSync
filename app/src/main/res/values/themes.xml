@@ -15,4 +15,26 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="CalendarViewGridItem">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="CalendarViewGridItem.Header">
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="CalendarViewGridItem.DayButton" parent="">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="backgroundTint">#FFF</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
 </resources>

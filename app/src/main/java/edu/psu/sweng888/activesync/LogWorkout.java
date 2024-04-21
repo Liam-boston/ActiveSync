@@ -282,13 +282,11 @@ public class LogWorkout extends Fragment {
         // Otherwise, simply use the incoming model as the new view model.
         if (incomingModel == null) {
             viewModel = new WorkoutEntryModel();
-            viewModel.currentUser = ActiveSyncApplication.getActiveUser();
-            // Redirect to login view if no one is logged in
+            viewModel.currentUser = ActiveSyncApplication.getActiveUserOrRedirectToLogin(getContext());
+            // Current user will be null if we're not logged in. We're about to be redirected, so finish
+            // the current activity.
             if (viewModel.currentUser == null) {
-                Intent redirectToLogin = new Intent(getContext(), LoginActivity.class);
-                startActivity(redirectToLogin);
-                Activity currentActivity = this.getActivity();
-                if (currentActivity != null) currentActivity.finish();
+                this.getActivity().finish();
                 return;
             }
         }

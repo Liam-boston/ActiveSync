@@ -1,9 +1,10 @@
 package edu.psu.sweng888.activesync.adapters;
 
+import static edu.psu.sweng888.activesync.utils.DateUtilities.withoutTime;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,24 +13,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import edu.psu.sweng888.activesync.ActiveSyncApplication;
+import edu.psu.sweng888.activesync.Constants;
 import edu.psu.sweng888.activesync.R;
 import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
-import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseType;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.MuscleGroup;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
-import edu.psu.sweng888.activesync.dataAccessLayer.models.Workout;
 import edu.psu.sweng888.activesync.dataAccessLayer.viewModels.WorkoutEntryModel;
 
 public class RecoveryStatusAdapter extends ArrayAdapter<MuscleGroup> {
@@ -102,15 +97,6 @@ public class RecoveryStatusAdapter extends ArrayAdapter<MuscleGroup> {
         return view;
     }
 
-    private Date withoutTime(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
-    }
 
     private boolean workoutTargetsMuscleGroup(WorkoutEntryModel workout, MuscleGroup muscleGroup) {
         return workout.exerciseType.muscleGroups.stream().anyMatch(x -> x.muscleGroupId == muscleGroup.muscleGroupId);
@@ -222,7 +208,7 @@ public class RecoveryStatusAdapter extends ArrayAdapter<MuscleGroup> {
             /**
              * The number of milliseconds in a single day (24 hours).
              */
-            dateBeingConsidered = withoutTime(new Date(dateBeingConsidered.getTime() + MILLISECONDS_PER_DAY));
+            dateBeingConsidered = withoutTime(new Date(dateBeingConsidered.getTime() + Constants.MILLISECONDS_PER_DAY));
         }
 
         // Calculate the days of pure rest until a full recovery.

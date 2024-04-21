@@ -62,4 +62,8 @@ dependencies {
 
     // Plotting Library
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // Paris, the airbnb programmatic styling library
+    implementation("com.airbnb.android:paris:2.0.0")
+    // TODO: May have to add "kapt" and "ksp"? Check out docs: https://github.com/airbnb/paris/blob/master/README.md#installation
 }

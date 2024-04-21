@@ -69,13 +69,13 @@ public class Homepage extends Fragment {
         recoveryStatusButton = view.findViewById(R.id.recovery_status_button);
         trackProgressButton = view.findViewById(R.id.track_progress_button);
 
-        // Get user name and email address data from login intent
+        // Get user name and email address data from login intent.
         Intent triggeringIntent = getActivity().getIntent();
         String displayName = "";
         if (triggeringIntent != null) {
-            displayName = triggeringIntent.getStringExtra(LoginActivity.INTENT_EXTRA_DISPLAY_NAME);
-            if (displayName == null || displayName.length() < 1 || displayName.equals("<Unknown>")) {
-                displayName = triggeringIntent.getStringExtra(LoginActivity.INTENT_EXTRA_EMAIL_ADDRESS);
+            displayName = triggeringIntent.getStringExtra(Constants.EXTRAS_KEY_USER_DISPLAY_NAME);
+            if (displayName == null || displayName.length() < 1 || displayName.equals(Constants.USER_INFO_PLACEHOLDER)) {
+                displayName = triggeringIntent.getStringExtra(Constants.EXTRAS_KEY_USER_EMAIL_ADDRESS);
             }
         }
         greetingTextView.setText(generateGreetingText(displayName));

@@ -30,15 +30,291 @@
         android:textSize="12sp"
         android:textStyle="italic" />
 
-    <ListView
-        android:id="@+id/calendar_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView
         android:layout_below="@id/calendar_instructions"
+        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="-12dp"
-        android:layout_marginEnd="5dp"
-        android:dividerHeight="10sp" />
+        >
 
+        <GridLayout
+            android:id="@+id/calendar_view_monthly_grid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="7"
+            android:rowCount="7"
+            >
+
+
+            <!--
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="3"
+                android:enabled="false"
+                android:textColor="#FFF"
+                android:backgroundTint="#000"
+                />
+            -->
+
+            <TextView
+                android:text="@string/abbrev_sunday"
+                style="@style/CalendarViewGridItem.Header"
+                />
+
+            <TextView
+                style="@style/CalendarViewGridItem.Header"
+                android:text="@string/abbrev_monday"
+                />
+
+            <TextView
+                style="@style/CalendarViewGridItem.Header"
+                android:text="@string/abbrev_tuesday"
+                />
+
+            <TextView
+                style="@style/CalendarViewGridItem.Header"
+                android:text="@string/abbrev_wednesday"
+                />
+
+            <TextView
+                style="@style/CalendarViewGridItem.Header"
+                android:text="@string/abbrev_thursday"
+                />
+
+            <TextView
+                style="@style/CalendarViewGridItem.Header"
+                android:text="@string/abbrev_friday"
+                />
+
+            <TextView
+                style="@style/CalendarViewGridItem.Header"
+                android:text="@string/abbrev_saturday"
+                />
+
+            <!--
+            Above this comment are the days of the week headers and should not be
+            touched programmatically.
+
+            Below this comment are hard-coded buttons for days of the month. Due to the difficulties
+            applying/changing styles programmatically, enough buttons are added to this view to
+            accommodate any month configuration.
+
+            Consumers of this view should set the text to unused days to "". For example, if your
+            displayed month starts on a Tuesday, you would set the first two buttons (Sunday and
+            Monday) to have no text, then start numbering the remaining buttons with "1", "2", etc.
+            -->
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="X"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+            <Button
+                style="@style/CalendarViewGridItem.DayButton"
+                android:text="@string/calendar_button_placeholder"
+                />
+
+        </GridLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

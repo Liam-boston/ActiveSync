@@ -24,9 +24,6 @@ import edu.psu.sweng888.activesync.databinding.LoginActivityBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String INTENT_EXTRA_DISPLAY_NAME = "user_display_name";
-    public static final String INTENT_EXTRA_EMAIL_ADDRESS = "user_email_address";
-
     private FirebaseAuth auth;
     private EditText loginEmail, loginPassword;
     private Button signupRedirectButton;
@@ -74,6 +71,17 @@ public class LoginActivity extends AppCompatActivity {
             );
         });
 
+        // Set up a DEBUGGING handler that responds to a click on the title of the login screen.
+        // This should "log in" as the TestUser to make application testing quicker.
+        // TODO: REMOVE THIS BEFORE DELIVERING THE APPLICATION
+        findViewById(R.id.login_title).setOnClickListener(view -> {
+            redirectAfterSuccessfulLogin(
+                "TestUser",
+                "test.user@example.com"
+            );
+        });
+
+
         loginButton.setOnClickListener(view -> {
 
             String email = loginEmail.getText().toString();
@@ -88,22 +96,8 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onSuccess(AuthResult authResult) {
                                     setIsLoading(false);
                                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                    Intent mainViewIntent = new Intent(LoginActivity.this, MainActivity.class );
-
-                                    // Get details from the logged-in user to create a user in our local database
-                                    // TODO: Should we be able to store data in Firebase later?
                                     FirebaseUser user = authResult.getUser();
-                                    mainViewIntent.putExtra(
-                                        INTENT_EXTRA_DISPLAY_NAME,
-                                        user == null ? "<Unknown>" : user.getDisplayName()
-                                    );
-                                    mainViewIntent.putExtra(
-                                        INTENT_EXTRA_EMAIL_ADDRESS,
-                                        user == null ? "<Unknown>" : user.getEmail()
-                                    );
-                                    startActivity(mainViewIntent);
-                                    finish();
-
+                                    redirectAfterSuccessfulLogin(user.getDisplayName(), user.getEmail());
                                 }
                             }).addOnFailureListener(e -> {
                                 setIsLoading(false);
@@ -118,6 +112,22 @@ public class LoginActivity extends AppCompatActivity {
                 loginEmail.setError("Enter a password");
             }
         });
+    }
+
+    private void redirectAfterSuccessfulLogin(String displayName, String emailAddress) {
+        // We will use these details from the logged-in user to create or find a user in our
+        // local database.
+        Intent mainViewIntent = new Intent(LoginActivity.this, MainActivity.class );
+        mainViewIntent.putExtra(
+            Constants.EXTRAS_KEY_USER_DISPLAY_NAME,
+            displayName == null ? Constants.USER_INFO_PLACEHOLDER : displayName
+        );
+        mainViewIntent.putExtra(
+            Constants.EXTRAS_KEY_USER_EMAIL_ADDRESS,
+            emailAddress == null ? Constants.USER_INFO_PLACEHOLDER : emailAddress
+        );
+        startActivity(mainViewIntent);
+        finish();
     }
 }
 

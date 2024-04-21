@@ -72,8 +72,7 @@ public class TrackProgress extends Fragment {
         );
         binding.progressTrackerLineChart.getXAxis().setLabelRotationAngle(-45f);
         //*
-        final float MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
-        binding.progressTrackerLineChart.getXAxis().setGranularity(MILLISECONDS_PER_DAY);
+        binding.progressTrackerLineChart.getXAxis().setGranularity(Constants.MILLISECONDS_PER_DAY);
         //*/
 
         // Set up click event handlers

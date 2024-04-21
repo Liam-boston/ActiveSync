@@ -13,6 +13,7 @@ import edu.psu.sweng888.activesync.dataAccessLayer.models.Weight;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.Workout;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutSet;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutWithSets;
+import edu.psu.sweng888.activesync.utils.DateUtilities;
 
 public final class DefaultWorkouts {
 
@@ -31,24 +32,20 @@ public final class DefaultWorkouts {
         );
     }
 
-    private static Date dateOf(int year, int month, int day) {
-        return Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.of("America/Montreal")).toInstant());
-    }
-
-    public static final Workout April18Workout = TestUserPullups(1l, dateOf(2024, 04, 18));
+    public static final Workout April18Workout = TestUserPullups(1l, DateUtilities.dateFor(2024, 04, 18));
     public static final WorkoutSet April18WorkoutSet1 = new WorkoutSet(1l, April18Workout.workoutId, 5, Weight.Pounds(100));
     public static final WorkoutSet April18WorkoutSet2 = new WorkoutSet(2l, April18Workout.workoutId, 5, Weight.Pounds(105));
     public static final WorkoutWithSets April18 = new WorkoutWithSets(April18Workout, April18WorkoutSet1, April18WorkoutSet2);
 
-    public static final Workout April19Workout = TestUserPullups(2l, dateOf(2024, 04, 19));
+    public static final Workout April19Workout = TestUserPullups(2l, DateUtilities.dateFor(2024, 04, 19));
     public static final WorkoutSet April19WorkoutSet1 = new WorkoutSet(3l, April19Workout.workoutId, 5, Weight.Pounds(100));
     public static final WorkoutWithSets April19 = new WorkoutWithSets(April19Workout, April19WorkoutSet1);
 
-    public static final Workout April20Workout = TestUserPullups(3l, dateOf(2024, 04, 20));
+    public static final Workout April20Workout = TestUserPullups(3l, DateUtilities.dateFor(2024, 04, 20));
     public static final WorkoutSet April20WorkoutSet1 = new WorkoutSet(4l, April20Workout.workoutId, 5, Weight.Kilograms(60));
     public static final WorkoutWithSets April20 = new WorkoutWithSets(April20Workout, April20WorkoutSet1);
 
-    public static final Workout April21Workout = TestUserPullups(4l, dateOf(2024, 04, 21));
+    public static final Workout April21Workout = TestUserPullups(4l, DateUtilities.dateFor(2024, 04, 21));
     public static final WorkoutSet April21WorkoutSet1 = new WorkoutSet(5l, April21Workout.workoutId, 5, Weight.Pounds(130));
     public static final WorkoutWithSets April21 = new WorkoutWithSets(April21Workout, April21WorkoutSet1);
 

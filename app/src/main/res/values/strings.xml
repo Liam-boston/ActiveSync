@@ -58,4 +58,12 @@
     <string name="start_date_picker_label">From</string>
     <string name="date_picker_hint">Click to choose...</string>
     <string name="log_out">Log Out</string>
+    <string name="abbrev_sunday">Su</string>
+    <string name="abbrev_monday">M</string>
+    <string name="abbrev_tuesday">T</string>
+    <string name="abbrev_wednesday">W</string>
+    <string name="abbrev_thursday">Th</string>
+    <string name="abbrev_friday">F</string>
+    <string name="abbrev_saturday">Sa</string>
+    <string name="calendar_button_placeholder">X</string>
 </resources>

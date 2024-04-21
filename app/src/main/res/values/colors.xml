@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimary">#191C1E</color>
     <color name="colorPrimaryVariant">#374955</color>
+    <color name="transparent">#00000000</color>
+    <color name="halfTransparentBlack">#80000000</color>
 </resources>

@@ -1,6 +1,9 @@
 package edu.psu.sweng888.activesync;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -61,4 +64,11 @@ public class ActiveSyncApplication extends Application {
 
     public static User getActiveUser() { return activeUser; }
     public static void setActiveUser(User activeUser) { ActiveSyncApplication.activeUser = activeUser;}
+
+    public static User getActiveUserOrRedirectToLogin(Context context) {
+        if (activeUser != null) return activeUser;
+        Intent redirectToLogin = new Intent(context, LoginActivity.class);
+        context.startActivity(redirectToLogin);
+        return null;
+    }
 }
