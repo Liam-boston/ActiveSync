@@ -1,162 +1,58 @@
 package edu.psu.sweng888.activesync;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 
-import androidx.annotation.ColorRes;
 import androidx.fragment.app.Fragment;
 
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
-import com.airbnb.paris.Paris;
-
-import java.sql.Array;
-import java.time.Instant;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import edu.psu.sweng888.activesync.adapters.RecoveryStatusAdapter;
-import edu.psu.sweng888.activesync.adapters.WorkoutSetAdapter;
-import edu.psu.sweng888.activesync.dataAccessLayer.cannedData.DefaultMuscleGroups;
-import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
-import edu.psu.sweng888.activesync.dataAccessLayer.models.ExerciseType;
-import edu.psu.sweng888.activesync.dataAccessLayer.models.MuscleGroup;
+import edu.psu.sweng888.activesync.calendar.CalendarDayItem;
+import edu.psu.sweng888.activesync.calendar.CalendarDayItemClickHandler;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
-import edu.psu.sweng888.activesync.dataAccessLayer.models.Workout;
-import edu.psu.sweng888.activesync.dataAccessLayer.models.WorkoutSet;
 import edu.psu.sweng888.activesync.dataAccessLayer.viewModels.WorkoutEntryModel;
 import edu.psu.sweng888.activesync.databinding.FragmentCalendarBinding;
+import edu.psu.sweng888.activesync.utils.DateGrouping;
 import edu.psu.sweng888.activesync.utils.DateUtilities;
 
-public class WorkoutCalendar extends Fragment {
+public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHandler {
 
     private FragmentCalendarBinding binding;
 
     public WorkoutCalendar() { }
 
-    private enum DayOfWeek {
-        Sunday,
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday
-    }
+    private Date selectedMonthDate;
+    private DateGrouping<WorkoutEntryModel> workoutsByDate;
+    private List<CalendarDayItem> calendarDayItems;
+    private Date selectedCalendarDate;
 
-    private static interface CalendarDayItemClickHandler {
-        void handleCalendarDayItemClick(CalendarDayItem clicked);
-    }
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat monthlyCalendarHeaderFormat = new SimpleDateFormat("MMMM yyyy");
 
-    private static class CalendarDayItem {
-        private final Button button;
-
-        private Date date;
-
-        private boolean isSelected = false;
-
-        public CalendarDayItem(Button button, Date date, CalendarDayItemClickHandler handler) {
-            this.button = button;
-            this.date = date;
-            this.button.setOnClickListener(v -> {
-                this.toggleSelected();
-                if (handler != null) {
-                    handler.handleCalendarDayItemClick(this);
-                }
-            });
-            this.show();
-        }
-
-        public void setText(String text) {
-            this.button.setText(text);
-        }
-
-        public void show() {
-            this.button.setVisibility(View.VISIBLE);
-        }
-
-        public void hide() {
-            this.button.setVisibility(View.GONE);
-        }
-
-        public void setBlank() {
-            this.button.setText("");
-        }
-
-        private int color(@ColorRes int id) {
-            return this.button.getContext().getResources().getColor(id);
-        }
-
-        public void enable() {
-            this.button.setEnabled(true);
-            this.button.setTextColor(color(R.color.black));
-        }
-
-        public void disable() {
-            this.button.setEnabled(false);
-            this.button.setTextColor(color(R.color.halfTransparentBlack));
-        }
-
-        public void select() {
-            this.isSelected = true;
-            this.button.setTextColor(color(R.color.white));
-            this.button.setBackgroundColor(color(R.color.black));
-        }
-
-        public void deselect() {
-            this.isSelected = false;
-            this.button.setTextColor(color(R.color.black));
-            this.button.setBackgroundColor(color(R.color.white));
-        }
-
-        public boolean isSelected() { return this.isSelected; }
-
-        public void toggleSelected() {
-            if (this.isSelected()) {
-                this.deselect();
-            }
-            else {
-                this.select();
-            }
-        }
-
-        @SuppressLint("SetTextI18n")
-        public void setDate(Date date) {
-            this.date = date;
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(this.date);
-            this.button.setText(Integer.toString(cal.get(Calendar.DAY_OF_MONTH)));
-        }
-
-        public boolean isForDate(Date date) {
-            return DateUtilities.isSameDate(this.date, date);
-        }
-
-        public Date getDate() {
-            return this.date;
-        }
-    }
-
-    private int selectedYear;
-    private int selectedMonth;
 
     private Date firstDateOfSelectedYearMonth() {
-        return DateUtilities.firstDateOfYearMonth(this.selectedYear, this.selectedMonth + 1); // FIXME: Inconsistency b/t Calendar API (which uses zero-based months) and our custom DateUtilities implementations (which use one-based months) forces us to do this lil' hack.
+        return DateUtilities.firstDateOfYearMonth(
+            DateUtilities.yearOf(this.selectedMonthDate),
+            DateUtilities.monthOf(this.selectedMonthDate) + 1 // FIXME: Inconsistency b/t Calendar API (which uses zero-based months) and our custom DateUtilities implementations (which use one-based months) forces us to do this lil' hack.
+        );
+    }
+
+    private void updateMonthlyCalendarLabelForSelectedYearMonth() {
+        binding.calendarViewMonthlyMonthYearLabel.setText(
+            monthlyCalendarHeaderFormat.format(
+                firstDateOfSelectedYearMonth()
+            )
+        );
     }
 
     @Override
@@ -165,60 +61,83 @@ public class WorkoutCalendar extends Fragment {
         binding = FragmentCalendarBinding.inflate(inflater, container, false);
 
         // By default, start the selected year/month as that of the current day.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        this.selectedYear = calendar.get(Calendar.YEAR);
-        this.selectedMonth = calendar.get(Calendar.MONTH);
+        this.selectedMonthDate = new Date();
 
-        // Get model representations of the grid items that represent actual days in the selected
-        // year and month.
-        List<CalendarDayItem> calendarDayItems = getItemsForSelectedYearMonth(null); // TODO: Attach handler!
+        // Update the label for the calendar to display the human-readable month and year
+        updateMonthlyCalendarLabelForSelectedYearMonth();
 
-        // Get the workout data for the current user
+        // Get the user's workout data
         User activeUser = ActiveSyncApplication.getActiveUserOrRedirectToLogin(getContext());
         if (activeUser == null) {
             this.getActivity().finish();
             return null;
         }
-        List<WorkoutEntryModel> workoutData;
+
         try {
-            workoutData = WorkoutEntryModel.allFromDatabaseByUser(
-                ActiveSyncApplication.getDatabase(),
-                activeUser
+            workoutsByDate = new DateGrouping<WorkoutEntryModel>().populateWithDatedItems(
+                WorkoutEntryModel.allFromDatabaseByUser(
+                    ActiveSyncApplication.getDatabase(),
+                    activeUser
+                ),
+                model -> model.workout.date
             );
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
         }
 
-        // Enable any calendar day item that has data
-        List<Date> selectedYearMonthDatesWithData = workoutData.stream()
-            .map(model -> model.workout.date)
-            .filter(date -> DateUtilities.isSameMonthAndYear(date, firstDateOfSelectedYearMonth()))
-            .collect(Collectors.toList());
-        List<CalendarDayItem> itemsWithData = calendarDayItems.stream()
-            .filter(item -> selectedYearMonthDatesWithData.stream().anyMatch(
-                dateWithData -> item.isForDate(dateWithData)
-            ))
-            .collect(Collectors.toList());
-        for (CalendarDayItem itemWithData : itemsWithData) {
-            itemWithData.enable();
-            // TODO: Attach a handler!
-        }
+        // Set up the fragment's state w.r.t. the calendar UI elements
+        setupCalendar();
 
-
+        // Add button handlers to the prev/next month buttons to re-setup the calendar.
+        binding.calendarViewMonthlyButtonPrevious.setOnClickListener(__ -> {
+            this.selectedMonthDate = DateUtilities.dateOfPreviousMonth(this.selectedMonthDate);
+            updateMonthlyCalendarLabelForSelectedYearMonth();
+            setupCalendar();
+        });
+        binding.calendarViewMonthlyButtonNext.setOnClickListener(__ -> {
+            this.selectedMonthDate = DateUtilities.dateOfNextMonth(this.selectedMonthDate);
+            updateMonthlyCalendarLabelForSelectedYearMonth();
+            setupCalendar();
+        });
 
         return binding.getRoot();
     }
 
+    private void setupCalendar() {
+        // Get model representations of the grid items that represent actual days in the selected
+        // year and month.
+        calendarDayItems = getItemsForSelectedYearMonth(this);
+
+        // Enable any calendar day item that has data
+        List<CalendarDayItem> itemsWithData = calendarDayItems.stream()
+            .filter(item -> workoutsByDate.hasItemsFor(item.getDate()))
+            .collect(Collectors.toList());
+
+        for (CalendarDayItem itemWithData : itemsWithData) {
+            itemWithData.enable();
+        }
+    }
+
+    @Override
+    public void handleCalendarDayItemClick(CalendarDayItem clicked) {
+        if (!clicked.isSelected()) return;
+        // If we just toggled this item to be "selected", store the item's date, then visually
+        // deselect everything else.
+        selectedCalendarDate = clicked.getDate();
+        calendarDayItems.stream()
+            .filter(item -> item != clicked)
+            .filter(CalendarDayItem::isSelected)
+            .forEach(CalendarDayItem::deselect);
+    }
+
     private List<CalendarDayItem> getItemsForSelectedYearMonth(CalendarDayItemClickHandler itemClickHandler) {
         List<CalendarDayItem> calendarDayItems = new ArrayList<>();
-        Date firstDateOfCurrentMonth = firstDateOfSelectedYearMonth();
+        Date firstDateOfSelectedMonth = firstDateOfSelectedYearMonth();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(firstDateOfCurrentMonth);
-        int firstDayOfMonth = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
+        calendar.setTime(firstDateOfSelectedMonth);
         int lastDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int firstDayOfFirstWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int buttonIndex = 0;
         for (Button dayButton : getChildButtons(binding.calendarViewMonthlyGrid)) {
             // Create calendar day item instance
@@ -227,22 +146,20 @@ public class WorkoutCalendar extends Fragment {
             item.disable();
 
             // If we are in the cells before the first day of the given month, blank them out
-            if (buttonIndex < 7 && dayOfWeekAsInt < firstDayOfWeek) {
+            int dayOfMonth = (buttonIndex + 1) - firstDayOfFirstWeek;
+            if (dayOfMonth < 0) {
                 item.setBlank();
             }
-            else {
-                int dayOfMonth = buttonIndex+1 - firstDayOfMonth;
-                item.setDate(new Date(firstDateOfCurrentMonth.getTime() + Constants.MILLISECONDS_PER_DAY * (dayOfMonth - 1)));
-            }
-
-            // If we are in the cells after the last day of the month, hide them entirely
-            if (buttonIndex > lastDayOfMonth) {
-                item.hide();
-            }
-            else {
-                // This calendar day item is a valid day in the month in question
+            // If we are in range of the month's days, set the date and add the item to the return list
+            else if (dayOfMonth < lastDayOfMonth){
+                item.setDate(new Date(firstDateOfSelectedMonth.getTime() + Constants.MILLISECONDS_PER_DAY * dayOfMonth));
                 calendarDayItems.add(item);
             }
+            // If we are past the last day of the month, hide the item
+            else {
+                item.hide();
+            }
+
             buttonIndex++;
         }
         return calendarDayItems;

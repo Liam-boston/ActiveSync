@@ -5,6 +5,8 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
+import edu.psu.sweng888.activesync.Constants;
+
 public class DateUtilities {
 
     private DateUtilities() {}
@@ -29,14 +31,22 @@ public class DateUtilities {
     }
 
     public static int getCurrentMonth() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        return calendar.get(Calendar.MONTH);
+        return monthOf(new Date());
     }
 
     public static int getCurrentYear() {
+        return yearOf(new Date());
+    }
+
+    public static int monthOf(Date date) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public static int yearOf(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         return calendar.get(Calendar.YEAR);
     }
 
@@ -44,31 +54,31 @@ public class DateUtilities {
         return DateUtilities.dateFor(year, month, 1);
     }
 
-    public static Date lastDateOfYearMonth(int year, int month) {
+    public static Date dateOfPreviousMonth(int currentYear, int currentMonth) {
+        Date firstDateOfCurrentMonth = withoutTime(firstDateOfYearMonth(currentYear, currentMonth + 1));
+        return withoutTime(new Date(firstDateOfCurrentMonth.getTime() - Constants.MILLISECONDS_PER_DAY)); // last day of previous month
+    }
+
+    public static Date dateOfPreviousMonth(Date date) {
+        return dateOfPreviousMonth(
+            yearOf(date),
+            monthOf(date)
+        );
+    }
+
+    public static Date dateOfNextMonth(int currentYear, int currentMonth) {
+        Date firstDateOfCurrentMonth = withoutTime(firstDateOfYearMonth(currentYear, currentMonth + 1));
         Calendar calendar = Calendar.getInstance();
-        Date firstDate = firstDateOfYearMonth(year, month);
-        calendar.setTime(firstDate);
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        return calendar.getTime();
+        calendar.setTime(firstDateOfCurrentMonth);
+        int daysInCurrentMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        return withoutTime(new Date(firstDateOfCurrentMonth.getTime() + daysInCurrentMonth * Constants.MILLISECONDS_PER_DAY)); // first day of next month (unless of by one error?)
     }
 
-    public static Date firstDateOfCurrentMonth() {
-        return firstDateOfYearMonth(getCurrentYear(), getCurrentMonth());
+    public static Date dateOfNextMonth(Date date) {
+        return dateOfNextMonth(
+            yearOf(date),
+            monthOf(date)
+        );
     }
 
-    public static Date lastDateOfCurrentMonth() {
-        return lastDateOfYearMonth(getCurrentYear(), getCurrentMonth());
-    }
-
-    public static boolean isSameMonthAndYear(Date a, Date b) {
-        if (a == null || b == null) return false;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(a);
-        int year_a = calendar.get(Calendar.YEAR);
-        int month_a = calendar.get(Calendar.MONTH);
-        calendar.setTime(b);
-        int year_b = calendar.get(Calendar.YEAR);
-        int month_b = calendar.get(Calendar.MONTH);
-        return year_a == year_b && month_a == month_b;
-    }
 }
