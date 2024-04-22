@@ -2,6 +2,8 @@ package edu.psu.sweng888.activesync.dataAccessLayer.models;
 
 import java.io.Serializable;
 
+import edu.psu.sweng888.activesync.Constants;
+
 /**
  * Represents a measurement of weight in a particular unit.
  */
@@ -30,6 +32,16 @@ public class Weight implements Serializable {
 
     public static Weight Kilograms(double amount) {
         return new Weight(WeightUnit.Kilograms, amount);
+    }
+
+    public Weight asPounds() {
+        if (this.unit == WeightUnit.Pounds) return this;
+        return Pounds(this.amount * Constants.KG_TO_LBS_FACTOR);
+    }
+
+    public Weight asKilograms() {
+        if (this.unit == WeightUnit.Kilograms) return this;
+        return Kilograms(this.amount * Constants.LBS_TO_KG_FACTOR);
     }
 
     /**

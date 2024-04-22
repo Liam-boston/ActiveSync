@@ -195,14 +195,13 @@ public class TrackProgress extends Fragment {
         // For each matched workout, compute the maximum weight lifted across all sets. This is the
         // value we'd like to plot.  Assume all plots are in pounds (lbs).  If we encounter a set
         // that is measured in kilograms, convert it to pounds.
-        final double LBS_PER_KG = 2.204623;
         Map<Long, Double> maxWeightByDayAsUnixTimestamp = new HashMap<>();
         for (Workout workout : targetWorkouts) {
             double maxWeightLbs = ActiveSyncApplication.getDatabase()
                 .workoutSetDao()
                 .getSetsForWorkout(workout.workoutId)
                 .stream()
-                .map(set -> set.weight.unit == WeightUnit.Pounds ? set.weight.amount : set.weight.amount * LBS_PER_KG)
+                .map(set -> set.weight.asPounds().amount)
                 .max(Comparator.naturalOrder())
                 .orElse(0.0); // TODO: Provide a different default value?
             // Add or update the entry for this day in the map

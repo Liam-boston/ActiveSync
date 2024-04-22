@@ -31,6 +31,7 @@
         android:textStyle="italic" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/calendar_view_monthly_container"
         android:layout_below="@id/calendar_instructions"
         android:layout_marginTop="32dp"
         android:layout_width="wrap_content"
@@ -359,4 +360,12 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/calendar_details_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/calendar_view_monthly_container"
+        />
+
 </RelativeLayout>

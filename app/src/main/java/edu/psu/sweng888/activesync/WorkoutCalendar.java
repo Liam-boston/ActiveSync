@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.psu.sweng888.activesync.adapters.WorkoutEntryModelSummaryAdapter;
 import edu.psu.sweng888.activesync.calendar.CalendarDayItem;
 import edu.psu.sweng888.activesync.calendar.CalendarDayItemClickHandler;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
@@ -28,6 +30,7 @@ import edu.psu.sweng888.activesync.utils.DateUtilities;
 public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHandler {
 
     private FragmentCalendarBinding binding;
+    private WorkoutEntryModelSummaryAdapter workoutSummaryAdapter;
 
     public WorkoutCalendar() { }
 
@@ -101,10 +104,31 @@ public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHan
             setupCalendar();
         });
 
+        // Finally, set up the recycler view that shows details of workouts for the date we have
+        // currently selected.
+        workoutSummaryAdapter = new WorkoutEntryModelSummaryAdapter(
+            new ArrayList<>(),
+            model -> false, // TODO: Create "on edit click" handler!
+            model -> false // TODO: Create "on delete click" handler!
+        );
+        binding.calendarDetailsRecyclerView.setAdapter(workoutSummaryAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        binding.calendarDetailsRecyclerView.setLayoutManager(layoutManager);
+        binding.calendarDetailsRecyclerView.scrollToPosition(0);
+
+        // NOTE: We set up the events to populate this adapter with data (reinitializing it)
+        //       via the class method "handleCalendarDayItemClick".
+
         return binding.getRoot();
     }
 
     private void setupCalendar() {
+        // Clear summary adapter data
+        if (workoutSummaryAdapter != null) {
+            workoutSummaryAdapter.setData(new ArrayList<>());
+        }
+
         // Get model representations of the grid items that represent actual days in the selected
         // year and month.
         calendarDayItems = getItemsForSelectedYearMonth(this);
@@ -129,6 +153,11 @@ public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHan
             .filter(item -> item != clicked)
             .filter(CalendarDayItem::isSelected)
             .forEach(CalendarDayItem::deselect);
+
+        // Populate the adapter view with items for the currently selected day.
+        List<WorkoutEntryModel> workoutsForDay = workoutsByDate.getItemsFor(selectedCalendarDate);
+        workoutSummaryAdapter.setData(workoutsForDay);
+        
     }
 
     private List<CalendarDayItem> getItemsForSelectedYearMonth(CalendarDayItemClickHandler itemClickHandler) {
@@ -141,7 +170,6 @@ public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHan
         int buttonIndex = 0;
         for (Button dayButton : getChildButtons(binding.calendarViewMonthlyGrid)) {
             // Create calendar day item instance
-            int dayOfWeekAsInt = (buttonIndex % 7) + 1;
             CalendarDayItem item = new CalendarDayItem(dayButton, null, itemClickHandler);
             item.disable();
 

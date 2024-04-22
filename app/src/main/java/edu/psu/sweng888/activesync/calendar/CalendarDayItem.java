@@ -66,6 +66,7 @@ public class CalendarDayItem {
     public void disable() {
         this.button.setEnabled(false);
         this.button.setTextColor(color(R.color.halfTransparentBlack));
+        this.button.setBackgroundColor(color(R.color.white));
     }
 
     public void select() {
