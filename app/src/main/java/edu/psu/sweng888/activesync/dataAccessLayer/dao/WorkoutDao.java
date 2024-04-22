@@ -1,6 +1,7 @@
 package edu.psu.sweng888.activesync.dataAccessLayer.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -30,6 +31,14 @@ public abstract class WorkoutDao extends AbstractUpsertingDao<Workout> {
     @Insert
     @Override
     public abstract long insert(Workout workout);
+
+
+    /**
+     * Deletes the given workout record from the database. Be sure to delete any associated data
+     * (e.g. sets) first before removing the associated workout record.
+     */
+    @Delete
+    public abstract int delete(Workout workout);
 
     @Update
     @Override
@@ -62,12 +71,6 @@ public abstract class WorkoutDao extends AbstractUpsertingDao<Workout> {
     public abstract long[] getWorkoutIdsForUser(long userId);
         //'2016-10-09'
 
-    /*
-        - tried writing query to return workouts within past three days, but everytime
-         I compare and format the date from the record it comes back null
-    */
-    @Query("SELECT * FROM workout WHERE DATE(date) >= DATE('now','-3 days') and :userId = user_id")
-    public abstract List<Workout> getWorkoutsFromRange(long userId);
     @Query("DELETE FROM workout")
     public abstract void wipe();
 }

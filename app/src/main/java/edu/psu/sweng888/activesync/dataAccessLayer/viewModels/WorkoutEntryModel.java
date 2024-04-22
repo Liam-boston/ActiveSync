@@ -141,6 +141,15 @@ public class WorkoutEntryModel implements Serializable {
         return this;
     }
 
+    public boolean deleteFromDatabase(ActiveSyncDatabase db) {
+        // Delete the sets associated with this workout, then delete the workout itself
+        WorkoutSetDao workoutSetDao = db.workoutSetDao();
+        workoutSetDao.deleteSetsForWorkoutId(this.workout.workoutId);
+        WorkoutDao workoutDao = db.workoutDao();
+        workoutDao.delete(this.workout);
+        return true;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder()

@@ -1,10 +1,13 @@
 package edu.psu.sweng888.activesync.utils;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -26,6 +29,22 @@ public class DateGrouping<TItem> {
         assert grouping != null;
         grouping.add(item);
         _groupingsByDateAsMillis.put(key, grouping);
+    }
+
+    public GroupingRemovalResult remove(TItem item, Date date, Function<Pair<TItem, TItem>, Boolean> itemsMatchPredicate) {
+        long key = dateToKey(date);
+        ArrayList<TItem> grouping = _groupingsByDateAsMillis.getOrDefault(key, new ArrayList<>());
+        if (grouping == null) return new GroupingRemovalResult(false, -1);
+        int lengthBeforeRemoval = grouping.size();
+        Optional<TItem> maybeMatchingItem = grouping.stream().filter(groupingItem -> itemsMatchPredicate.apply(Pair.create(groupingItem, item))).findFirst();
+        if (!maybeMatchingItem.isPresent()) return new GroupingRemovalResult(false, lengthBeforeRemoval);
+        grouping.remove(maybeMatchingItem.get());
+        int lengthAfterRemoval = grouping.size();
+        _groupingsByDateAsMillis.put(key, grouping);
+        return new GroupingRemovalResult(
+            lengthBeforeRemoval != lengthAfterRemoval,
+            lengthAfterRemoval
+        );
     }
 
     public DateGrouping<TItem> populateWithDatedItems(Collection<TItem> items, Function<TItem, Date> dateSelector) {
@@ -50,6 +69,7 @@ public class DateGrouping<TItem> {
 
     public boolean hasItemsFor(Date date) {
         if (date == null) return false;
-        return _groupingsByDateAsMillis.containsKey(dateToKey(date));
+        ArrayList<TItem> grouping = _groupingsByDateAsMillis.getOrDefault(dateToKey(date), new ArrayList<>());
+        return grouping.size() > 0;
     }
 }

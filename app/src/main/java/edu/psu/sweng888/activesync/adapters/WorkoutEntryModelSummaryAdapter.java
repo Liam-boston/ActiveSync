@@ -97,17 +97,27 @@ public class WorkoutEntryModelSummaryAdapter extends RecyclerView.Adapter<Workou
             binding.workoutSummaryItemLabelExerciseName.setText(model.exerciseType.exerciseType.name);
             // Determine the number of sets and the total weight lifted (in pounds) and display
             // the info in the "details" text.
-            String setWord = "set";
             int numSets = model.sets.size();
-            if (numSets != 1) {
-                setWord += "s";
-            }
+            int totalReps = model.sets.stream()
+                .map(set -> set.reps)
+                .reduce(0, Integer::sum);
             double totalWeightLifted = model.sets.stream()
-                .map(set -> set.weight.asPounds().amount)
+                .map(set -> set.weight.asPounds().amount * set.reps)
                 .reduce(0.0, Double::sum);
+
             binding.workoutSummaryItemLabelExerciseDescription.setText(
-                numSets + " " + setWord + " (Total weight: " + (int) Math.round(totalWeightLifted) + " lbs)"
+                pluralize("set", numSets) + " with " + pluralize("rep", totalReps)
+                    + " totaling " + (int) Math.round(totalWeightLifted) + " lbs"
             );
+        }
+
+        private String pluralize(String word, int amount) {
+            // This is "dumb" pluralization (just adds "s" regardless of word). This is okay because
+            // we know the input domain. If we were to try this with arbitrary input, we'd want to
+            // use a library.
+            String phrase = amount + " " + word;
+            if (amount != 1) phrase += "s";
+            return phrase;
         }
     }
 }

@@ -1,11 +1,13 @@
 package edu.psu.sweng888.activesync;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +23,14 @@ import java.util.stream.Collectors;
 import edu.psu.sweng888.activesync.adapters.WorkoutEntryModelSummaryAdapter;
 import edu.psu.sweng888.activesync.calendar.CalendarDayItem;
 import edu.psu.sweng888.activesync.calendar.CalendarDayItemClickHandler;
+import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase;
+import edu.psu.sweng888.activesync.dataAccessLayer.db.ActiveSyncDatabase_Impl;
 import edu.psu.sweng888.activesync.dataAccessLayer.models.User;
 import edu.psu.sweng888.activesync.dataAccessLayer.viewModels.WorkoutEntryModel;
 import edu.psu.sweng888.activesync.databinding.FragmentCalendarBinding;
 import edu.psu.sweng888.activesync.utils.DateGrouping;
 import edu.psu.sweng888.activesync.utils.DateUtilities;
+import edu.psu.sweng888.activesync.utils.GroupingRemovalResult;
 
 public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHandler {
 
@@ -108,8 +113,8 @@ public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHan
         // currently selected.
         workoutSummaryAdapter = new WorkoutEntryModelSummaryAdapter(
             new ArrayList<>(),
-            model -> false, // TODO: Create "on edit click" handler!
-            model -> false // TODO: Create "on delete click" handler!
+            this::onDetailsItemEditClick,
+            this::onDetailsItemDeleteClick
         );
         binding.calendarDetailsRecyclerView.setAdapter(workoutSummaryAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -121,6 +126,44 @@ public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHan
         //       via the class method "handleCalendarDayItemClick".
 
         return binding.getRoot();
+    }
+
+    private boolean onDetailsItemEditClick(WorkoutEntryModel itemToEdit) {
+        // Redirect to the "log workout" view to edit the clicked item
+        Intent editWorkout = new Intent(this.getActivity(), MainActivity.class);
+        editWorkout.putExtra(Constants.EXTRAS_KEY_WORKOUT_TO_EDIT, itemToEdit);
+        editWorkout.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // This flag is necessary to reuse the existing MainActivity as opposed starting a new one
+        startActivity(editWorkout);
+        return true;
+    }
+
+    private boolean workoutEntryModelsMatch(Pair<WorkoutEntryModel, WorkoutEntryModel> modelPair) {
+        return modelPair.first != null && modelPair.second != null
+            && modelPair.first.workout.workoutId == modelPair.second.workout.workoutId;
+    }
+
+    private boolean onDetailsItemDeleteClick(WorkoutEntryModel itemToDelete) {
+        boolean deleteSuccessful = itemToDelete.deleteFromDatabase(ActiveSyncApplication.getDatabase());
+        if (!deleteSuccessful) return false; // TODO: Future enhancement -- toast!
+
+        // Remove the item from our date groupings
+        GroupingRemovalResult result = this.workoutsByDate.remove(
+            itemToDelete,
+            itemToDelete.workout.date,
+            this::workoutEntryModelsMatch
+        );
+        if (!result.removedSuccessfully) return false; // TODO: Future enhancement -- toast!
+        if (result.itemsRemainingInGrouping < 1) {
+            // Disable the associated calendar day item's button since there are no more items
+            // and we won't get more until we reload this fragment or page
+            calendarDayItems.stream()
+                .filter(item -> item.isForDate(itemToDelete.workout.date))
+                .forEach(item -> {
+                    item.deselect();
+                    item.disable();
+                });
+        }
+        return true;
     }
 
     private void setupCalendar() {
