@@ -188,7 +188,12 @@ public class WorkoutCalendar extends Fragment implements CalendarDayItemClickHan
 
     @Override
     public void handleCalendarDayItemClick(CalendarDayItem clicked) {
-        if (!clicked.isSelected()) return;
+        // If we just deselected an item, clear the summary items display and short circuit
+        if (!clicked.isSelected()) {
+            workoutSummaryAdapter.setData(new ArrayList<>());
+            return;
+        }
+
         // If we just toggled this item to be "selected", store the item's date, then visually
         // deselect everything else.
         selectedCalendarDate = clicked.getDate();
